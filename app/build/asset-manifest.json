@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ac17ff4f.css",
+    "main.js": "/static/js/main.2af1ed6f.js",
+    "static/media/bg_purple.png": "/static/media/bg_purple.2ecd4fd3750a3784c781.png",
+    "static/media/404.png": "/static/media/404.c3e4a62c122fdf799235.png",
+    "static/media/Vazirmatn-Light.woff2": "/static/media/Vazirmatn-Light.c69d69242c6acd778a4c.woff2",
+    "static/media/Vazirmatn-Bold.woff2": "/static/media/Vazirmatn-Bold.73e2137ad487bc370cd8.woff2",
+    "static/media/Vazirmatn-SemiBold.woff2": "/static/media/Vazirmatn-SemiBold.222198d0517b323d035a.woff2",
+    "static/media/Vazirmatn-ExtraBold.woff2": "/static/media/Vazirmatn-ExtraBold.1fcea217ef81eab7ac37.woff2",
+    "static/media/Vazirmatn-Medium.woff2": "/static/media/Vazirmatn-Medium.12a304f576dce3db4c23.woff2",
+    "static/media/Vazirmatn-Thin.woff2": "/static/media/Vazirmatn-Thin.17ab321b2c4ca5a41eea.woff2",
+    "static/media/Vazirmatn-Regular.woff2": "/static/media/Vazirmatn-Regular.05514a658926672dddfd.woff2",
+    "static/media/new-logo.jfif": "/static/media/new-logo.7eac082ca973b9d32c67.jfif",
+    "static/media/1.png": "/static/media/1.c3b6b03301f9a0e5620f.png",
+    "static/media/2.png": "/static/media/2.4f158f6e9ae86fbedfcb.png",
+    "static/media/3.png": "/static/media/3.c457debb366debd028d3.png",
+    "static/media/astronaut.svg": "/static/media/astronaut.110ff7cb9d9b085eb76d948e4e0cc32c.svg",
+    "static/media/logo.svg": "/static/media/logo.8963a92076f0ef4cf717def0cdec3405.svg",
+    "static/media/moon.svg": "/static/media/moon.c4c7a79c5710a55492526bf258625d7b.svg",
+    "static/media/earth.svg": "/static/media/earth.0af4e4ba176794dfcce057ea768a0d97.svg",
+    "static/media/rocket.svg": "/static/media/rocket.a18a530765a87739ae0294310f234529.svg",
+    "static/media/overlay_stars.svg": "/static/media/overlay_stars.21a32cc9bc0c3068cb9a.svg",
+    "index.html": "/index.html",
+    "main.ac17ff4f.css.map": "/static/css/main.ac17ff4f.css.map",
+    "main.2af1ed6f.js.map": "/static/js/main.2af1ed6f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ac17ff4f.css",
+    "static/js/main.2af1ed6f.js"
+  ]
+}

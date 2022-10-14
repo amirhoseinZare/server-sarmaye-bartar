@@ -1,0 +1,61 @@
+Dear {username} 
+Meta username:{metaUsername}
+We are so SORRY to inform you that, Our Automatic Drawdown detection system Found a Daily Drawdown Violation on your Account. 
+=============================== 
+Here's The Detail: 
+ 
+Your Initial Balance: {initialBalance}$ 
+Maximum Acceptable Daily Loss 5% = {initialBalance*0.05}$ 
+Your Equity touched={initialBalance-maxAbsoluteDrawdown}$
+
+......................................................
+Dear {username}   
+Meta username:{metaUsername}
+
+We are so SORRY to inform you that, You have Violated Our Rules by Trading Crypto Currency on SAT/SUN. 
+You can find our detailed Rules on our Website.  
+===============================  
+Here's The Detail:  
+On 14:57 (2022/07/29) BTCUSD, SELL Position Triggered.
+
+...........................................................
+
+Dear Amir  
+  
+We are so SORRY to inform you that, Our Automatic Drawdown detection system Found a Maximum Drawdown Violation on your Account.  
+===============================  
+Here's The Detail:  
+  
+Your Initial Balance: {firstBalance}
+Maximum Acceptable Monthly Drawdown 12% = {firstBalance*0.12}
+Your Balance touched={toched}
+...........................................................
+
+(reset) Your Account Checked Out. You can Reset Your Account. 
+We will Inform you By E-Mail and send Your New Account information . 
+Feel free To ask us any Question. 
+Best Regards
+.............................
+
+اقای محمدی, [Jul 29, 2022 at 09:55]
+Dear Amir   
+   
+Your Account Checked Out. Your Account Extended.  
+You have 10 Days Since today to Continue Your Trade on your account. Remember You can Extend Your Account on-time During Challenge.  
+Feel free To ask us any Question.  
+Best Regards
+اقای محمدی, [Jul 29, 2022 at 09:55]
+Dear Amir    
+Congratulations!!! 
+You Have Passed PHASE 1. Your Account Checked out and Everything Was Fine. 
+Your Next Phase Account Information Will send to you by E-mail as Soon as Possible.
+Feel free To ask us any Question.  
+Best Regards
+اقای محمدی, [Jul 29, 2022 at 09:55]
+Dear Amir    
+Congratulations!!! 
+You Have Passed PHASE 2. Your Account Checked out and Everything Was Fine.
+Please Send us a Valid Identity Proof to Real@sarmayegozarebartar.ir
+Your Real Account Information Will send to you by E-mail as Soon as Possible. 
+Feel free To ask any Question.  
+Best Regards
