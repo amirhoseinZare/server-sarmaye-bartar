@@ -125,7 +125,7 @@ const getChartApiConfig = (accountId)=>{
     const token = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5M2ExYTM4MWFhMTU3NTU2M2RmYTI4MDk1YWQ3M2RjZSIsInBlcm1pc3Npb25zIjpbXSwidG9rZW5JZCI6IjIwMjEwMjEzIiwiaWF0IjoxNjU2MzQ4MTk3LCJyZWFsVXNlcklkIjoiOTNhMWEzODFhYTE1NzU1NjNkZmEyODA5NWFkNzNkY2UifQ.EipbTU80FTXxvQeq6bYCqQvTbi4riF9VQ3kHCcwmLMrM2j_bFAXkj2HY7H3L61Q6UMKK3Ecn2rWc0zM4sLY-z1lbTu9w4Yzkobg27S57w1pjD6cnGXAFSex6X7ziT51o97r80-_K_8448pLXgDy8Q6m7xBgBfqtTiHlstb9lyylQSUuRIOwv4G7L7hJtde_y5H6EungIfH4MscecR4Gp8yrDMgpVJ9xFRNhNgyiW6y5oSNYFdI8jS5JaY4XxPp9-OH8iql9sWFOl-F8DzwBDyv2-APQkvOXwWLHE0BS9LWkAZG8zV8IMS6RUzMR_p2CBvbSH-NeoHxc5ySqXtNbS3rPlCyRem08dpsoGc36xJuscslrTgw_R_OWV6JJhIB7cJuyyWW_7B3oCY6BpEFD98LYCagLhJWFwhb9MU5oF1H-ZTJ4G07Spm9KcEI9-iVyjxvrSUyWNtEG7m4UNb7JD30O4E1TfluhpI6h-PlY_GTu6x5M18vU2hVY5ES_-1gBpSeuoCbr4KTqEJamLKnO7_zK8tFHi5FwwQbohgu--K07qoxwXAX9NYUrh5FsoH5WqxeUvU8AFjzmztahZKZQgv06NOx5U13JIKz3sM8YmE3MIR8bILx7mG0kQ8sTWnPrCJzae4MZLAhuXTZvq2C07Qw-3sDhjXaDYEHAA58Nyi9E"
     var config = {
         method: 'get',
-        url: `https://risk-management-api-v1.new-york.agiliumtrade.ai/users/current/accounts/${accountId}/equity-chart`,
+        url: `https://risk-management-api-v1.new-york.agiliumtrade.ai/users/current/accounts/${accountId}/equity-chart?realTime=true`,
         headers: { 
           'auth-token': token,
           "User-Agent": "PostmanRuntime/7.29.0",
