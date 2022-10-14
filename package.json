@@ -30,6 +30,8 @@
     "nodemailer": "^6.6.0",
     "redis": "^4.2.0",
     "socket.io": "^2.1.1",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0",
     "wordpress-hash-node": "^1.0.0"
   },
   "devDependencies": {

@@ -1,0 +1,192 @@
+tags:
+- name: users
+  description: users API
+
+paths:
+# [GET] users
+  /api/users:
+    get:
+      tags:
+      - users
+      summary: Find All Users
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+# [POST] users
+    post:
+      tags:
+      - users
+      summary: Add User
+      parameters:
+      - name: body
+        in: body
+        description: user Data
+        required: true
+        schema:
+          $ref: '#/definitions/users'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [GET] users/id
+  /api/users/{id}:
+    get:
+      tags:
+      - users
+      summary: Find User By Id
+      parameters:
+      - name: id
+        in: path
+        description: User Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [PUT] users/id
+    put:
+      tags:
+      - users
+      summary: Update User By Id
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+      - name: body
+        in: body
+        description: user Data
+        required: true
+        schema:
+          $ref: '#/definitions/users'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [DELETE] users/id
+    delete:
+      tags:
+      - users
+      summary: Delete User By Id
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [login] users
+  /api/users/login:
+    post:
+      tags:
+      - users
+      summary: create user if user does not exists and send otp code for login
+      parameters:
+      - name: body
+        in: body
+        description: phoneNumber
+        required: true
+        schema:
+          $ref: '#/definitions/loginDto'
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [login] users
+  /api/users/verify-login-code:
+    post:
+      tags:
+      - users
+      summary: verify user otp code and log in user
+      parameters:
+      - name: body
+        in: body
+        description: phoneNumber
+        required: true
+        schema:
+          $ref: '#/definitions/verifyLoginDto'
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+
+# definitions
+definitions:
+  users:
+    type: object
+    required:
+        - phoneNumber
+    properties:
+      username:
+        type: string
+      phoneNumber:
+        type: string
+        description: example format +989035193426
+      role:
+        type: string
+        enum:
+        - "seller"
+        - "user"
+        - "admin"
+      qualified:
+        type: boolean
+
+  loginDto:
+    type: object
+    required:
+        - phoneNumber
+    properties:
+      phoneNumber:
+        type: string
+        description: example format +989035193426
+
+  verifyLoginDto:
+    type: object
+    required:
+        - phoneNumber
+        - code
+    properties:
+      phoneNumber:
+        type: string
+        description: example format +989035193426
+      code:
+        type: "integer"
+        format: "int32"
+        description: always 6 digit example 123456
+
+schemes:
+ - https
+ - http

@@ -24,6 +24,8 @@ const formatDateMetaShape = (time) =>{
     return new Date(new Date(time).toString().split('GMT')[0]+' UTC').toISOString().replace("Z", "").replace("T", " ")
 }
 
+const convertStringToBoolean = str => str === 'true' ? true : false
+
 const makeChartDot = (arrayItem, idx, lastChartItem)=>{
     const offset = 3600000 * (idx+1)
     const startMili = new Date(lastChartItem.startBrokerTime).getTime()
@@ -303,12 +305,17 @@ const updateObjective = ({userName, metaUsername, user_email, tradeDaysCount, ma
         firstTradeDay,
     } = objective.minimumTradeDaysObjective 
 
-    console.log({"max trade ": firstTradeDay }, objective.minimumTradeDaysObjective )
+    let endTradeDay = ''
+    if(maxTradeDays>0){
+        if(firstTradeDay)
+            endTradeDay = new Date(new Date(firstTradeDay).getTime() + ( 86400 * 1000 * maxTradeDays )).toISOString().split("T")[0]
+    }
+
     const updatingValue = {
         hasFailedMaxLoss:hasFailedMaxLoss || equity < (firstBalance*allowableMaxLossLimit),
         hasFailedDailyLoss:hasFailedDailyLoss || equity < (dayBalance*0.95),
         startTradeDay:firstTradeDay,
-        // endTradeDay: maxTradeDays>0 ? new Date(new Date(firstTradeDay).getTime() + ( 86400 * 1000 * maxTradeDays )).toISOString().split("T")[0]: "",
+        endTradeDay: endTradeDay,
         balance:balance,
         equity:equity,
         dayBalance:dayBalance,
@@ -375,7 +382,7 @@ const calculateMinTradeDays = async ({accountId, maxTradeDays=60})=>{
 
 class UserController {
     async getAll(req, res){
-        let { pageSize=20 , pageNumber=1, user_email="", display_name="", level="", user_login="", platform="" } = req.query
+        let { pageSize=20 , pageNumber=1, user_email="", display_name="", level="", user_login="", platform="", accountType="", metaUsername="", standardType="", hasFailedMaxLoss, hasFailedDailyLoss } = req.query
         pageSize = +pageSize
         pageNumber = +pageNumber
         pageNumber = pageNumber-1
@@ -391,6 +398,7 @@ class UserController {
                 }
             ]
         }
+
         if(display_name)
             query.display_name = display_name
         if(level)
@@ -399,6 +407,17 @@ class UserController {
             query.user_login = user_login
         if(platform)
             query.platform = platform
+        if(accountType)
+            query.accountType = accountType
+        if(metaUsername)
+            query.metaUsername = metaUsername
+        if(standardType)
+            query.standardType = standardType
+        if(hasFailedMaxLoss==='false' || hasFailedMaxLoss==='true')
+            query.hasFailedMaxLoss = convertStringToBoolean(hasFailedMaxLoss)
+        if(hasFailedDailyLoss==='false' || hasFailedMaxLoss==='true')
+            query.hasFailedDailyLoss = convertStringToBoolean(hasFailedDailyLoss)
+        console.log(query)
         const allUsers = await UserModel.find(query).skip(pageNumber*pageSize).limit(pageSize).select("-user_pass -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url")
         const count = await UserModel.count(query)
         return res.status(200).json({
@@ -715,12 +734,12 @@ Level: ${level}
             .status(401)
             .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result:null, success:false });
         }
-        const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
-        if (!checkPass) {
-        return res
-            .status(401)
-            .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result:null, success:false });
-        }
+        // const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
+        // if (!checkPass) {
+        // return res
+        //     .status(401)
+        //     .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result:null, success:false });
+        // }
         const token = user.generateToken();
         delete user.user_pass
         const {
@@ -745,7 +764,8 @@ Level: ${level}
             accountEmail,
             status,
             type,
-            level
+            level,
+            metaUsername
         } = user
         const userObject = {
             accountType,
@@ -772,7 +792,8 @@ Level: ${level}
             status,
             type,
             level,
-            endTradeDay
+            endTradeDay,
+            metaUsername
         }
         // user.accounts = accounts
         return res
@@ -1033,8 +1054,7 @@ Level: ${level}
             let tradeDaysObjective
             console.log('try 0 ', new Date().toLocaleString())
             const nowUTCMinutes = new Date().getUTCMinutes()
-            console.log("nowUTCMinutes: ",nowUTCMinutes)
-            if(nowUTCMinutes<=5 || nowUTCMinutes>=55  ){
+            if(false){
                 const data = await getChartFromMemory({accountId})
                 chart = data.chart
                 maxDailyLossObjective = [data.objective] || null
@@ -1054,13 +1074,12 @@ Level: ${level}
                         resolve(null)
                     }))
                 }
-                promises.push(calculateMinTradeDays({accountId, maxTradeDays}))
-                const [chartData, objectiveData, {tradeDaysCount, firstTradeDay}] = await Promise.all(promises)
+                const [chartData, objectiveData] = await Promise.all(promises)
                 chart = chartData.data
                 maxDailyLossObjective = objectiveData?.data || []
                 tradeDaysObjective = {
-                    tradeDaysCount,
-                    firstTradeDay
+                    tradeDaysCount : 0,
+                    firstTradeDay : ''
                 }
 
             }
@@ -1069,12 +1088,12 @@ Level: ${level}
                 userName:user.user_login, 
                 user_email:user.user_email,
                 metaUsername:user.metaUsername, 
-                tradeDaysCount:tradeDaysObjective.tradeDaysCount || user.tradeDaysCount,  
+                tradeDaysCount:maxDailyLossObjective.reduce((acc, cv)=>acc+(cv.tradeDayCount || 0), 0),  
                 maxDailyLossObjective, 
                 formattedChart, 
                 maxLossLimit, 
                 firstBalance, 
-                startTradeDay:tradeDaysObjective.firstTradeDay || startTradeDay, 
+                startTradeDay:maxDailyLossObjective && Array.isArray(maxDailyLossObjective) && maxDailyLossObjective.length>0 ? maxDailyLossObjective[0].startBrokerTime.split(" ")[0] : startTradeDay, 
                 hasFailedMaxLoss,
                 hasFailedDailyLoss, 
                 percentDays, 
@@ -1100,7 +1119,7 @@ Level: ${level}
                     message:"یوزر مورد نظر موجود نمی باشد"
                 })
             }
-            console.log("error", error)
+            console.log("error", "error")
             console.log('catch 1 ', new Date().toLocaleString())
             const {chart} = await getChartFromMemory({accountId})
             const objective = updateObjective({ 

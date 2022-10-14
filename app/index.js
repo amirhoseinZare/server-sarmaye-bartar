@@ -61,7 +61,7 @@ class Application {
     connectRedis()
     //production
     /* stage */     
-    // const dbURI = "mongodb://root:TQBMngLUp0YPjHEISdhx8zOq@arthur.iran.liara.ir:33959/sb?authSource=admin"
+    // const dbURI = "mongodb://root:EMtjBpbXkC6jTQnXqeBfnL5H@tommy.iran.liara.ir:34627/sb-stage?authSource=admin"
     const dbURI = "mongodb://root:EMtjBpbXkC6jTQnXqeBfnL5H@tommy.iran.liara.ir:34627/sb?authSource=admin"
     const dbAdress =
       process.env.DB_ADRESS ||  dbURI
