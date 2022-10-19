@@ -1,9 +1,11 @@
 {
   "files": {
-    "main.css": "/static/css/main.f2dc5834.css",
-    "main.js": "/static/js/main.ba1b6f75.js",
+    "main.css": "/static/css/main.23c0fb3b.css",
+    "main.js": "/static/js/main.e65c8973.js",
     "static/media/bg_purple.png": "/static/media/bg_purple.2ecd4fd3750a3784c781.png",
+    "static/media/sgb-logo.png": "/static/media/sgb-logo.49308d1b782e7ebcceb5.png",
     "static/media/404.png": "/static/media/404.c3e4a62c122fdf799235.png",
+    "static/media/bitcoin2.png": "/static/media/bitcoin2.9840879163c19ea715cb.png",
     "static/media/Vazirmatn-Light.woff2": "/static/media/Vazirmatn-Light.c69d69242c6acd778a4c.woff2",
     "static/media/Vazirmatn-Bold.woff2": "/static/media/Vazirmatn-Bold.73e2137ad487bc370cd8.woff2",
     "static/media/Vazirmatn-SemiBold.woff2": "/static/media/Vazirmatn-SemiBold.222198d0517b323d035a.woff2",
@@ -11,6 +13,11 @@
     "static/media/Vazirmatn-Medium.woff2": "/static/media/Vazirmatn-Medium.12a304f576dce3db4c23.woff2",
     "static/media/Vazirmatn-Thin.woff2": "/static/media/Vazirmatn-Thin.17ab321b2c4ca5a41eea.woff2",
     "static/media/Vazirmatn-Regular.woff2": "/static/media/Vazirmatn-Regular.05514a658926672dddfd.woff2",
+    "static/media/login-background.jpeg": "/static/media/login-background.e8b04cba3e875b2fe477.jpeg",
+    "static/media/second-grade.svg": "/static/media/second-grade.5783d06b6fec741c9b01db70a47a9af0.svg",
+    "static/media/third-grade.svg": "/static/media/third-grade.5783d06b6fec741c9b01db70a47a9af0.svg",
+    "static/media/first-grade.svg": "/static/media/first-grade.d3ccc610ad454f41c2fddbc0a562802c.svg",
+    "static/media/medal 1.svg": "/static/media/medal 1.d3ccc610ad454f41c2fddbc0a562802c.svg",
     "static/media/new-logo.jfif": "/static/media/new-logo.7eac082ca973b9d32c67.jfif",
     "static/media/1.png": "/static/media/1.c3b6b03301f9a0e5620f.png",
     "static/media/2.png": "/static/media/2.4f158f6e9ae86fbedfcb.png",
@@ -22,11 +29,11 @@
     "static/media/rocket.svg": "/static/media/rocket.a18a530765a87739ae0294310f234529.svg",
     "static/media/overlay_stars.svg": "/static/media/overlay_stars.21a32cc9bc0c3068cb9a.svg",
     "index.html": "/index.html",
-    "main.f2dc5834.css.map": "/static/css/main.f2dc5834.css.map",
-    "main.ba1b6f75.js.map": "/static/js/main.ba1b6f75.js.map"
+    "main.23c0fb3b.css.map": "/static/css/main.23c0fb3b.css.map",
+    "main.e65c8973.js.map": "/static/js/main.e65c8973.js.map"
   },
   "entrypoints": [
-    "static/css/main.f2dc5834.css",
-    "static/js/main.ba1b6f75.js"
+    "static/css/main.23c0fb3b.css",
+    "static/js/main.e65c8973.js"
   ]
 }

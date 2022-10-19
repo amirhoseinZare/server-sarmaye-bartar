@@ -1287,6 +1287,17 @@ Level: ${level}
         // console.log(users)
     }
 
+    async updateObjectiveManul(req, res){
+        const { id, type } = req.body
+        const user = await UserModel.findOneAndUpdate({mtAccountId:id}, {
+            [type==='day'?'hasFailedDailyLoss':'hasFailedMaxLoss']:false
+        })
+        return res.json({
+            success:true,
+            message:'updated successfully'
+        })
+    }
+
 }
 
 module.exports =  new (controller(UserController))()
