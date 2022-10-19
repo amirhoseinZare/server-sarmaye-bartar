@@ -196,10 +196,6 @@ const calculateObjective = ({ userName,metaUsername, user_email, tradeDaysCount,
     const balance = allTodayBalance.length > 0  ? Math.max(...allTodayBalance) : chart[chart.length-1]?.maxBalance
     // const newTradeDays = chart.length>0 ? new Date().toLocaleString(chart[0]) : startTradeDay
 
-    if(result!==null && hasFailedDailyLoss==false && !(hasFailedDailyLoss ? false : isMaxDailyLossFailed===null ? null : !isMaxDailyLossFailed)){
-        // dailyDrawdonw({to:user_email, metaUsername, userName, initialBalance:dayBalance, maxAbsoluteDrawdown:result.maxAbsoluteDrawdown})
-    }
-
     if(hasFailedMaxLoss==false && !(hasFailedMaxLoss ? false : equity > (firstBalance*allowableMaxLossLimit))){
         // maxDrawdown({to:user_email, userName, firstBalance, balance})
     }
@@ -220,7 +216,7 @@ const calculateObjective = ({ userName,metaUsername, user_email, tradeDaysCount,
                 allowableMaxLossLimit:maxLossLimit
             },
             maxDailyLoss:{
-                passed:hasFailedDailyLoss ? false : isMaxDailyLossFailed===null ? null : !isMaxDailyLossFailed,
+                passed:hasFailedDailyLoss ? false :!isMaxDailyLossFailed,
                 equity:equity,
                 dayBalance:dayBalance,
                 limit:(dayBalance*0.95)
@@ -281,6 +277,14 @@ const calculateMaxDailyLossObjective = (maxDailyLossObjective) =>{
             result:null
         }
     const result = maxDailyLossObjective.find(item=>item.maxAbsoluteDrawdown > item.initialBalance*0.05)
+    console.log(
+        {
+            failed:result || result ? true : false,
+            dayBalance:maxDailyLossObjective[0].initialBalance,
+            result:maxDailyLossObjective[0]
+        },
+        {result},
+    )
     return {
         failed:result ? true : false,
         dayBalance:maxDailyLossObjective[0].initialBalance,
