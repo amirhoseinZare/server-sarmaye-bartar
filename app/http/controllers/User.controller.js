@@ -189,8 +189,7 @@ const calculateObjective = ({ userName,metaUsername, user_email, tradeDaysCount,
     const allTodayEquity = currentTodayData.map(item=>item.minEquity)
     const allTodayBalance = currentTodayData.map(item=>item.maxBalance)
 
-    const {dayBalance, failed:isMaxDailyLossFailed, result} = calculateMaxDailyLossObjective(maxDailyLossObjective)
-
+    const {dayBalance, failed:isMaxDailyLossFailed, result} = calculateMaxDailyLossObjective(maxDailyLossObjective, firstBalance)
     const equity = allTodayEquity.length > 0 ? Math.min(...allTodayEquity) : chart[chart.length-1]?.minEquity
     //balance
     const balance = allTodayBalance.length > 0  ? Math.max(...allTodayBalance) : chart[chart.length-1]?.maxBalance
@@ -216,7 +215,7 @@ const calculateObjective = ({ userName,metaUsername, user_email, tradeDaysCount,
                 allowableMaxLossLimit:maxLossLimit
             },
             maxDailyLoss:{
-                passed:hasFailedDailyLoss ? false :!isMaxDailyLossFailed,
+                passed:!isMaxDailyLossFailed,
                 equity:equity,
                 dayBalance:dayBalance,
                 limit:(dayBalance*0.95)
@@ -269,26 +268,19 @@ const getChartFromMemory = async ({accountId})=>{
     
 }
 
-const calculateMaxDailyLossObjective = (maxDailyLossObjective) =>{
+const calculateMaxDailyLossObjective = (maxDailyLossObjective, firstBalance) =>{
     if((!maxDailyLossObjective) || maxDailyLossObjective.length<=0)
         return {
             failed:null,
             dayBalance:null,
             result:null
         }
-    const result = maxDailyLossObjective.find(item=>item.maxAbsoluteDrawdown > item.initialBalance*0.05)
-    console.log(
-        {
-            failed:result || result ? true : false,
-            dayBalance:maxDailyLossObjective[0].initialBalance,
-            result:maxDailyLossObjective[0]
-        },
-        {result},
-    )
+    const result = maxDailyLossObjective.find(item=>item.maxAbsoluteDrawdown > item.initialBalance*0.05 && item.initialBalance>0)
+    // console.log({result}, maxDailyLossObjective)
     return {
         failed:result ? true : false,
-        dayBalance:maxDailyLossObjective[0].initialBalance,
-        result:maxDailyLossObjective[0]
+        dayBalance:maxDailyLossObjective.length>1 ? maxDailyLossObjective[0].initialBalance : firstBalance,
+        result:maxDailyLossObjective.length>1 ? maxDailyLossObjective[0] : firstBalance
     }
 }
 
@@ -317,13 +309,13 @@ const updateObjective = ({userName, metaUsername, user_email, tradeDaysCount, ma
 
     const updatingValue = {
         hasFailedMaxLoss:hasFailedMaxLoss || equity < (firstBalance*allowableMaxLossLimit),
-        hasFailedDailyLoss:hasFailedDailyLoss || equity < (dayBalance*0.95),
+        hasFailedDailyLoss:!objective.maxDailyLoss.passed,
         startTradeDay:firstTradeDay,
         endTradeDay: endTradeDay,
         balance:balance,
         equity:equity,
         dayBalance:dayBalance,
-        tradeDaysCount:count
+        tradeDaysCount:tradeDaysCount
     }
 
     UserModel.findByIdAndUpdate(userId, updatingValue, { new: true }).select("-user_pass -minEquityHistory").then(res=>{
