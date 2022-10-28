@@ -89,3 +89,19 @@ exports.unDeployAccountService = async ({mtAccountId}) =>{
     const res = await axios(config)
     return res
 }
+
+exports.getProvisingProfilesService = async ()=>{
+    const config = {
+        method: 'get',
+        url: `https://mt-provisioning-api-v1.agiliumtrade.agiliumtrade.ai/users/current/provisioning-profiles`,
+        headers: { 
+            'User-Agent':"PostmanRuntime/7.29.0",
+            'auth-token': token, 
+            'Accept-Encoding':"gzip, deflate, br",
+            'Connection':"keep-alive"
+        }
+    };
+    
+    const res = await axios(config)
+    return res
+}

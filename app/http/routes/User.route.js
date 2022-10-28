@@ -50,4 +50,6 @@ router.get("/update/type/user", UserController.test)
 
 router.post("/update/manual/admin/objective", UserController.updateObjectiveManul)
 
+router.get("/revalidate/provising-profiles", UserController.revalidateProvisingProfiles)
+
 module.exports = router;
