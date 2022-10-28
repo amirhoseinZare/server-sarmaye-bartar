@@ -391,6 +391,7 @@ const getProfilesFromMemory = async ()=>{
 
 const findServerByAccountTypeAndPlatform = ({profiles, accountType, platform})=>{
     const server = profiles.find(item=>{
+        return item.name.toLowerCase() === accountType.toLowerCase() && item.version === +platform.substring(2,3)
     })
     if(server)
         return server._id
