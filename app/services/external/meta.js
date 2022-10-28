@@ -53,7 +53,7 @@ exports.createUserAccountService = async ({
         },
         data : data
     };
-
+    console.log(data)
     const res = await axios(config)
     return res
 }
@@ -102,6 +102,24 @@ exports.getProvisingProfilesService = async ()=>{
         }
     };
     
+    const res = await axios(config)
+    return res
+}
+
+exports.deleteUserAccountService = async ({
+    mtAccountId
+})=>{        
+    const config = {
+        method: 'delete',
+        url: `https://mt-provisioning-api-v1.agiliumtrade.agiliumtrade.ai/users/current/accounts/${mtAccountId}?executeForAllReplicas=true`,
+        headers: { 
+            'User-Agent':"PostmanRuntime/7.29.0",
+            'auth-token': token, 
+            'Accept-Encoding':"gzip, deflate, br",
+            'Connection':"keep-alive"
+        },
+    };
+
     const res = await axios(config)
     return res
 }

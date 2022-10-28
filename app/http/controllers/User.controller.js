@@ -15,7 +15,7 @@ const {
     dailyDrawdonw,
     maxDrawdown
 } = require("../../core/emails");
-const { createUserAccountService, deployAccountService, unDeployAccountService, getProvisingProfilesService } = require("../../services/external/meta")
+const { createUserAccountService, deployAccountService, unDeployAccountService, getProvisingProfilesService, deleteUserAccountService } = require("../../services/external/meta")
 
 const getNowUTCDateInMetaFormat = (now)=>{
     return `${now.getFullYear()}-${now.getMonth().padStart(2)}-${now.getDate().padStart(2)} ${now.getHours().padStart(2)}-${now.getMinutes().padStart(2)}-${now.getSeconds().padStart(2)}`
@@ -391,7 +391,6 @@ const getProfilesFromMemory = async ()=>{
 
 const findServerByAccountTypeAndPlatform = ({profiles, accountType, platform})=>{
     const server = profiles.find(item=>{
-        return item.name === accountType && item.version === +platform.substring(2,3)
     })
     if(server)
         return server._id
@@ -743,6 +742,8 @@ Level: ${level}
                     success:false
                 })
             }
+            const { mtAccountId } = user
+            const call = await deleteUserAccountService({mtAccountId})
             return res.status(200).json({
                 result:user,
                 message:"عملیات با موفقیت انجام شد",
