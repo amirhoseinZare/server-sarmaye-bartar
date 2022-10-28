@@ -15,6 +15,7 @@ const {
     dailyDrawdonw,
     maxDrawdown
 } = require("../../core/emails");
+const { createUserAccountService, deployAccountService, unDeployAccountService } = require("../../services/external/meta")
 
 const getNowUTCDateInMetaFormat = (now)=>{
     return `${now.getFullYear()}-${now.getMonth().padStart(2)}-${now.getDate().padStart(2)} ${now.getHours().padStart(2)}-${now.getMinutes().padStart(2)}-${now.getSeconds().padStart(2)}`
@@ -493,7 +494,6 @@ class UserController {
             role,
             user_pass,
 
-            mtAccountId,
             mtAccessToken,
         
             ID,
@@ -510,7 +510,12 @@ class UserController {
             metaPassword,
             type,
             level,
-        } = req.body
+        } = req.body;
+
+        let {
+            mtAccountId
+        }  = req.body
+
         const userExist = await UserModel.findOne({$or: [{user_email:user_email}, {user_login:user_login}], type:"primary"})
 
         if(userExist){
@@ -520,6 +525,28 @@ class UserController {
                     .send({ message: "کاربر با این ایمیل وجود یا نام کاربری وجود دارد", result:null, success:false });
         }
 
+        try {
+            const res = await createUserAccountService({
+                login:metaUsername, 
+                password:metaPassword, 
+                name:user_login, 
+                server:accountType, 
+                provisioningProfileId:"7392bcf1-5dc5-45bd-9265-f3d0cc5749be", 
+                platform:platform.toLowerCase(),
+                symbol: "",
+                magic: 0,
+                quoteStreamingIntervalInSeconds:2.5
+            })
+            mtAccountId = res.data.id
+            console.log(res.data.id, res.data)
+            const deployedAccountRes = await deployAccountService({mtAccountId})
+        }
+        catch (error) {
+            console.log(error)
+            return res
+                .status(400)
+                .send({ message: "سرویس های خارجی با خطا رو به رو شدند", result:null, success:false });
+        }
         const randomPassword = Math.random().toString().slice(2,11);
 
         const hashedPassword = hasher.HashPassword(randomPassword);
