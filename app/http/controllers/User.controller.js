@@ -433,7 +433,7 @@ class UserController {
             query.standardType = standardType
         if(hasFailedMaxLoss==='false' || hasFailedMaxLoss==='true')
             query.hasFailedMaxLoss = convertStringToBoolean(hasFailedMaxLoss)
-        if(hasFailedDailyLoss==='false' || hasFailedMaxLoss==='true')
+        if(hasFailedDailyLoss==='false' || hasFailedDailyLoss==='true')
             query.hasFailedDailyLoss = convertStringToBoolean(hasFailedDailyLoss)
         console.log(query)
         const allUsers = await UserModel.find(query).skip(pageNumber*pageSize).limit(pageSize).select("-user_pass -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url")
