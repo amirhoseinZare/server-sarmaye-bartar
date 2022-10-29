@@ -395,7 +395,7 @@ const findServerByAccountTypeAndPlatform = ({profiles, accountType, platform})=>
     })
     if(server)
         return server._id
-    return ""
+    return null
 }
 
 class UserController {
@@ -529,6 +529,7 @@ class UserController {
             maxLossLimit,
             metaUsername,
             metaPassword,
+            investorPassword,
             type,
             level,
         } = req.body;
@@ -551,7 +552,7 @@ class UserController {
             const provisioningProfileId = findServerByAccountTypeAndPlatform({ profiles:profilesCache, accountType, platform })
             const res = await createUserAccountService({
                 login:metaUsername, 
-                password:metaPassword, 
+                password:investorPassword, 
                 name:user_login, 
                 server:accountType, 
                 provisioningProfileId, 
@@ -564,6 +565,7 @@ class UserController {
             const deployedAccountRes = await deployAccountService({mtAccountId})
         }
         catch (error) {
+            console.log(error)
             return res
                 .status(400)
                 .send({ message: "سرویس های خارجی با خطا رو به رو شدند", result:null, success:false });
@@ -1121,6 +1123,7 @@ Level: ${level}
                     }))
                 }
                 const [chartData, objectiveData] = await Promise.all(promises)
+                console.log({chartData})
                 chart = chartData.data
                 maxDailyLossObjective = objectiveData?.data || []
                 tradeDaysObjective = {

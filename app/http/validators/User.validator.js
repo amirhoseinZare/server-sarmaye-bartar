@@ -29,6 +29,7 @@ const postValidator = () => {
 
     const type =  body("type").isString().custom(v=>['primary', 'secondary'].includes(v))
     const level = body("level").isNumeric().custom(v=>[1, 2, 3].includes(v))
+
     // const status = body("status").isString().custom(v=>['active', 'deactive'].includes(v))
     return [ user_login, display_name, user_email, firstBalance, maxTradeDays, percentDays, infinitive, accountType, role, user_pass, platform,
          mtAccountId, mtAccessToken, ID, user_nicename, user_url, user_activation_key, user_status, startTradeDay, endTradeDay, 
