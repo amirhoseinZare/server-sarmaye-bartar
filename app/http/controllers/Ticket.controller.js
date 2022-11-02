@@ -55,16 +55,18 @@ class TicketController {
             type,
             isReply,
             originId,
-            status
+            status,
+            accountId
         } = req.body
 
         console.log(req.user)
 
         const {
             _id:userId,
-            mtAccountId:accountId,
             role:userRole,
         } = req.user
+
+        console.log(req.user)
 
         console.log({
             userId:new mongoose.Types.ObjectId(userId),

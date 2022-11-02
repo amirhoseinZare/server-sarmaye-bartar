@@ -1,14 +1,15 @@
 const { body } = require("express-validator");
 
 const postValidator = () => {
-    const resolverId = body("resolverId").isMongoId().optional({nullable:false});
+    const resolverId = body("resolverId").isMongoId().optional({nullable:false})
+    const accountId = body("accountId").isMongoId().optional({nullable:false});
     const title = body("title").isString()
     const description = body("description").isString()
     const type = body("type").isString().custom(v=>["question", "answer"].includes(v))
     const isReply = body("isReply").isBoolean()
     const originId = body("originId").isString().optional({nullable:false});
 
-    return [resolverId, title, description, type, isReply, originId]
+    return [resolverId, accountId, title, description, type, isReply, originId]
 }
 
 const patchValidator = () => {
