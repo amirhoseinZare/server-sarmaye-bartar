@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mailSchema = new mongoose.Schema({
+const ticketSchema = new mongoose.Schema({
     userId:{ type: mongoose.Schema.Types.ObjectId, required:true },
     resolverId:{ type: mongoose.Schema.Types.ObjectId, required:false },
     accountId:{ type: mongoose.Schema.Types.ObjectId, required:false },
@@ -7,9 +7,11 @@ const mailSchema = new mongoose.Schema({
     title:{ type: String, required:true },
     description:{ type: String, required:true },
     type:{ type: String, required:true, enum:['question', 'answer'] },
-    isReply: { type: Boolean, required:true, default:false }
+    isReply: { type: Boolean, required:true, default:false },
+    originId: { type: mongoose.Schema.Types.ObjectId, required:false },
+    status: { type: String, required:true, enum:["waiting", "resolved"] }
 },{ timestamps: true });
 
-const MailModel = mongoose.model("Mail", mailSchema);
+const TicketModel = mongoose.model("Ticket", ticketSchema);
 
-module.exports = MailModel;
+module.exports = TicketModel;
