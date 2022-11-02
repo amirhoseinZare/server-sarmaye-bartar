@@ -7,8 +7,10 @@ const auth = require("../middlewares/auth")
 
 router.get("/", [auth("admin", "user")], TicketController.getAll);
 
-router.post("/", [auth("admin", "user")], [...ticketValidator.postValidator()], TicketController.post);
+router.post("/reply", [auth("admin", "user")], [...ticketValidator.replyValidator()], TicketController.reply);
 
-router.patch("/:id", [auth("admin")], [...ticketValidator.patchValidator()], TicketController.patch)
+router.post("/", [auth("user")], [...ticketValidator.postValidator ()], TicketController.post );
+
+// router.patch("/:id", [auth("admin")], [...ticketValidator.patchValidator()], TicketController.reply)
 
 module.exports = router;

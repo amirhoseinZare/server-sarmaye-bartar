@@ -8,16 +8,16 @@ const postValidator = () => {
     return [accountId, title, description]
 }
 
-const patchValidator = () => {
+const replyValidator = () => {
     const originId = body("originId").isMongoId();
     const title = body("title").isString()
     const description = body("description").isString()
-    const type = body("type").isString().custom(v=>["question", "answer"].includes(v))
+    const originTicketStatus = body("originTicketStatus").isString().custom(v=>["waiting", "resolved"].includes(v))
     
-    return [ originId, title, description, type]
+    return [ originId, title, description, originTicketStatus]
 }
 
 module.exports = {
     postValidator,
-    patchValidator
+    replyValidator
 }

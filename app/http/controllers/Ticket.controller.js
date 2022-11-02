@@ -51,7 +51,6 @@ class TicketController {
         const {
             title,
             description,
-            originId,
             accountId
         } = req.body
 
@@ -71,7 +70,6 @@ class TicketController {
                 description,
                 type:"question",
                 isReply:false,
-                originId,
                 status:'waiting'
             })
             const ticketDoc = await newTicket.save()
@@ -146,8 +144,8 @@ class TicketController {
         const {
             title,
             description,
-            type,
             originId,
+            originTicketStatus
         } = req.body
 
         const {
@@ -155,7 +153,12 @@ class TicketController {
             role:userRole,
         } = req.user
 
+        const resolverId = userRole==='admin' ? userId : undefined
+        const type = userRole==='admin' ? 'answer' :'question'
+        
         try {
+            const originTicket = await TicketModel.findById(originId)
+            const allTicketsWay = await TicketModel.updateMany({"$or":[{originId:new mongoose.Types.ObjectId(originId)}, {_id:new mongoose.Types.ObjectId(originId)}]}, {status:originTicketStatus})
             const newTicket = new TicketModel({
                 userId,
                 userRole,
@@ -163,8 +166,9 @@ class TicketController {
                 description,
                 type,
                 isReply:true,
-                originId,
-                status:'waiting'
+                originId:originTicket._id,
+                resolverId,
+                accountId:originTicket.accountId
             })
             const ticketDoc = await newTicket.save()
 
@@ -175,7 +179,6 @@ class TicketController {
             });
         }
         catch(err){
-            console.log(err)
             return res.send({
                 result:null,
                 success:false,
