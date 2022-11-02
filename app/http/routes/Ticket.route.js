@@ -9,6 +9,6 @@ router.get("/", [auth("admin", "user")], TicketController.getAll);
 
 router.post("/", [auth("admin", "user")], [...ticketValidator.postValidator()], TicketController.post);
 
-router.patch("/:id", [auth("admin", "user")], [...ticketValidator.patchValidator()], TicketController.patch)
+router.patch("/:id", [auth("admin")], [...ticketValidator.patchValidator()], TicketController.patch)
 
 module.exports = router;

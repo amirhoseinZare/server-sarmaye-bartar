@@ -49,68 +49,53 @@ class TicketController {
         }
 
         const {
+            resolverId,
+            title,
+            description,
             type,
-            userId, //accountId that user wants to change
+            isReply,
+            originId,
+            status
         } = req.body
-        try {
-            const user = await UserModel.findOne({
-                "$or":[
-                    {
-                        user_email:req.user.user_email,
-                     }, //primary
-                     {
-                        accountEmail:req.user.user_email
-                     }
-                ],
-                _id:new mongoose.Types.ObjectId(userId) //which account user should send object id of account (_id in user document)
-            }).select("user_email mtAccountId accountEmail")
-    
-            if(!user){
-                return res
-                    .status(401)
-                    .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result:null, success:false });
-            }
 
-            const isTicketRepeated = await TicketModel.findOne({
-                user_email:req.user.user_email,
-                type,
-                mtAccountId:user.mtAccountId
-            })
-                
-            if(isTicketRepeated) {
-                return res
-                    .status(401)
-                    .send({ message: `you have already submitted a ticket for ${type} this account please check the status in your profile`, result:null, success:false });
-            }
-    
+        console.log(req.user)
+
+        const {
+            _id:userId,
+            mtAccountId:accountId,
+            role:userRole,
+        } = req.user
+
+        console.log({
+            userId:new mongoose.Types.ObjectId(userId),
+            resolverId,
+            accountId,
+            userRole,
+            title,
+            description,
+            type,
+            isReply,
+            originId,
+            status
+        })
+        
+        try {
             const newTicket = new TicketModel({
-                userId:new mongoose.Types.ObjectId(userId),
+                userId,
+                resolverId,
+                accountId,
+                userRole,
+                title,
+                description,
                 type,
-                user_email : user.user_email || user.accountEmail, //user primary account email
-                status:"waiting",
-                mtAccountId:user.mtAccountId
-                /*
-                    users can have multiple accounts
-                    first document with same user_email in collection would be primary
-                    others will carry accoutnEmail which stores the primary user_email
-                */
-               
+                isReply,
+                originId,
+                status:'waiting'
             })
             const ticketDoc = await newTicket.save()
-            const successMessage = {
-                'extend':`با عرض تبریک، درخواست شما با موفقیت ثبت شد و در صورت تائید در 1 الی 12 ساعت آینده، 10 روز به زمان چلنج شما اضافه خواهد شد. 
-                لطفا از ارسال تیکت مجدد در این باره خودداری کنید
-                `,
-                'reset':`درخواست شما با موفقیت ثبت شد و در صورت تائید مشخصات حساب جدید، 1 الی 12 ساعت آینده به ایمیل شما ارسال خواهد شد. 
-                لطفا از ارسال تیکت مجدد در این باره خودداری کنید
-                `, 
-                'nextPhase':`با عرض تبریک، درخواست شما با موفقیت ثبت شد و در صورت تائید مشخصات حساب جدید، 1 الی 12 ساعت آینده به ایمیل شما ارسال خواهد شد. 
-                لطفا از ارسال تیکت مجدد در این باره خودداری کنید`, 
-                'getProfit':``
-            }
 
             return res.status(201).json({
-                message: successMessage[type],
+                message: ticketDoc,
                 result: true,
                 success:true
             });
