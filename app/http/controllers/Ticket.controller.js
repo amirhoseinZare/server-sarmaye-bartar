@@ -49,13 +49,9 @@ class TicketController {
         }
 
         const {
-            resolverId,
             title,
             description,
-            type,
-            isReply,
             originId,
-            status,
             accountId
         } = req.body
 
@@ -66,31 +62,15 @@ class TicketController {
             role:userRole,
         } = req.user
 
-        console.log(req.user)
-
-        console.log({
-            userId:new mongoose.Types.ObjectId(userId),
-            resolverId,
-            accountId,
-            userRole,
-            title,
-            description,
-            type,
-            isReply,
-            originId,
-            status
-        })
-        
         try {
             const newTicket = new TicketModel({
                 userId,
-                resolverId,
                 accountId,
                 userRole,
                 title,
                 description,
-                type,
-                isReply,
+                type:"question",
+                isReply:false,
                 originId,
                 status:'waiting'
             })
@@ -153,6 +133,56 @@ class TicketController {
                 .status(401)
                 .send({ message: "درخواستی با مشخصات ارسال شده یافت نشد", result:null, success:false });
         }
+    }
+
+    async reply(req, res) {
+        const error = validationResult(req)
+        if (!error.isEmpty()) {
+            return res
+              .status(400)
+              .send({ result:null, message: "خطا در اعتبارسنجی", errors: error.array(), success:false });
+        }
+
+        const {
+            title,
+            description,
+            type,
+            originId,
+        } = req.body
+
+        const {
+            _id:userId,
+            role:userRole,
+        } = req.user
+
+        try {
+            const newTicket = new TicketModel({
+                userId,
+                userRole,
+                title,
+                description,
+                type,
+                isReply:true,
+                originId,
+                status:'waiting'
+            })
+            const ticketDoc = await newTicket.save()
+
+            return res.status(201).json({
+                message: ticketDoc,
+                result: true,
+                success:true
+            });
+        }
+        catch(err){
+            console.log(err)
+            return res.send({
+                result:null,
+                success:false,
+                message:"خطا در ثبت درخواست لطفا مجدد اقدام نمایید."
+            })
+        }
+      
     }
 
 }

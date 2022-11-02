@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const ticketSchema = new mongoose.Schema({
     userId:{ type: mongoose.Schema.Types.ObjectId, required:true },
     resolverId:{ type: mongoose.Schema.Types.ObjectId, required:false },
-    accountId:{ type: mongoose.Schema.Types.ObjectId, required:true },
+    accountId:{ type: mongoose.Schema.Types.ObjectId, required:false },
     userRole:{ type: String, required:true, eunm:['admin', 'user'], default:'user' },
     title:{ type: String, required:true },
     description:{ type: String, required:true },
