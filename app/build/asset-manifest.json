@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.6c1549e3.css",
-    "main.js": "/static/js/main.6d36e91f.js",
+    "main.css": "/static/css/main.d883d1d6.css",
+    "main.js": "/static/js/main.4ed37617.js",
     "static/media/bg_purple.png": "/static/media/bg_purple.2ecd4fd3750a3784c781.png",
     "static/media/sgb-logo.png": "/static/media/sgb-logo.49308d1b782e7ebcceb5.png",
     "static/media/404.png": "/static/media/404.c3e4a62c122fdf799235.png",
@@ -29,11 +29,11 @@
     "static/media/rocket.svg": "/static/media/rocket.a18a530765a87739ae0294310f234529.svg",
     "static/media/overlay_stars.svg": "/static/media/overlay_stars.21a32cc9bc0c3068cb9a.svg",
     "index.html": "/index.html",
-    "main.6c1549e3.css.map": "/static/css/main.6c1549e3.css.map",
-    "main.6d36e91f.js.map": "/static/js/main.6d36e91f.js.map"
+    "main.d883d1d6.css.map": "/static/css/main.d883d1d6.css.map",
+    "main.4ed37617.js.map": "/static/js/main.4ed37617.js.map"
   },
   "entrypoints": [
-    "static/css/main.6c1549e3.css",
-    "static/js/main.6d36e91f.js"
+    "static/css/main.d883d1d6.css",
+    "static/js/main.4ed37617.js"
   ]
 }

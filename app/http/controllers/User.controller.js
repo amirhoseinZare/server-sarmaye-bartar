@@ -165,6 +165,7 @@ const addDrawdownTracker = async (mtAccountId)=>{
         "period": "day",
         "relativeDrawdownThreshold": 0.95
     }
+    console.log('tracker, ', data)
     const config = {
         method: 'post',
         url: `https://risk-management-api-v1.new-york.agiliumtrade.ai/users/current/accounts/${mtAccountId}/trackers`,
@@ -617,6 +618,8 @@ class UserController {
         })
 
         const userDoc = await newUser.save()
+        const trackerResult = await addDrawdownTracker(mtAccountId)
+
         const token = newUser.generateToken();
         let emailText = `
 سلام و عرض احترام خدمت تریدر گرامی؛

@@ -10,7 +10,7 @@ exports.createUserAccountService = async ({
     platform,
     symbol="",
     magic=0,
-    quoteStreamingIntervalInSeconds=2.5
+    quoteStreamingIntervalInSeconds=2.5,
 })=>{        
     const data = {
         login,
@@ -40,7 +40,7 @@ exports.createUserAccountService = async ({
         copyFactoryRoles: [
             "PROVIDER"
         ],
-        riskManagementApiEnabled: false
+        riskManagementApiEnabled: true
     }
     const config = {
         method: 'post',
