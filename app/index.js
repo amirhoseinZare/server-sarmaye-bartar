@@ -81,7 +81,7 @@ class Application {
         console.log("Db connected ,");
       })
       .catch((err) => {
-        throw err;
+        console.log(err)
       });
   }
 }
