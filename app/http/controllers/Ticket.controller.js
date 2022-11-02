@@ -37,7 +37,27 @@ class TicketController {
         }
     }
 
-    getOne(){
+    async getTicketReplies(req, res){
+        const { id } = req.params
+        try {
+            const ticket = await TicketModel.findById(id)
+            const ticketReplies = await TicketModel.find({ originId:ticket._id }).sort('-createdAt')
+            return res.status(200).json({
+                result:{
+                    items:ticketReplies,
+                    origin:ticket
+                },
+                message:"عملیات با موفقیت انجام شد",
+                success:true
+            })
+        }
+        catch(err){
+            return res.send({
+                result:null,
+                success:false,
+                message:"خطا در دریافت اطلاعات"
+            })
+        }
     }
 
     async post(req, res){

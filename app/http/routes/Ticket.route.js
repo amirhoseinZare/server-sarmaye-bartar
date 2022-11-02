@@ -7,6 +7,8 @@ const auth = require("../middlewares/auth")
 
 router.get("/", [auth("admin", "user")], TicketController.getAll);
 
+router.get("/replies/:id", [auth("admin", "user")], TicketController.getTicketReplies);
+
 router.post("/reply", [auth("admin", "user")], [...ticketValidator.replyValidator()], TicketController.reply);
 
 router.post("/", [auth("user")], [...ticketValidator.postValidator ()], TicketController.post );
