@@ -5,15 +5,25 @@ const mongoose = require("mongoose")
 class TicketController {
     async getAll(req, res){
         try {
-            let { pageSize=20 , pageNumber=1, type="", user_email="" } = req.query
+            let { pageSize=20 , pageNumber=1, isReply="", status="" } = req.query
             pageSize = +pageSize
             pageNumber = +pageNumber
             pageNumber = pageNumber-1
-            const query = {}
-            // if(user_email)
-            //     query.user_email = user_email
-            // if(type)
-            //     query.type = type
+            const query = {
+                isReply:false
+            }
+            if(req.user.role === 'user')
+                query.userId = new mongoose.Types.ObjectId(req.user._id)
+            if(isReply==='both'){
+                delete query.isReply
+            }
+            if(isReply==='true'){
+                query.isReply = true
+            }
+            if(status){
+                query.status = status
+            }
+            console.log(new mongoose.Types.ObjectId(req.user._id))
             const allTickets = await TicketModel.find(query).skip(pageNumber*pageSize).limit(pageSize)
             const count = query.userId ||  query.type ? allTickets.length : await TicketModel.count()
             return res.status(200).json({
