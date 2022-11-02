@@ -38,7 +38,7 @@ class TicketController {
     }
 
     async getTicketReplies(req, res){
-        const { id } = req.params
+        const { originId:id } = req.params
         try {
             const ticket = await TicketModel.findById(id)
             const ticketReplies = await TicketModel.find({ originId:ticket._id }).sort('-createdAt')
@@ -111,47 +111,47 @@ class TicketController {
       
     }
 
-    async patch(req, res){
-        const error = validationResult(req)
-        if (!error.isEmpty()) {
-            return res
-              .status(400)
-              .send({ result:null, message: "خطا در اعتبارسنجی", errors: error.array(), success:false });
-        }
-        const {
-            status
-        } = req.body
+    // async patch(req, res){
+    //     const error = validationResult(req)
+    //     if (!error.isEmpty()) {
+    //         return res
+    //           .status(400)
+    //           .send({ result:null, message: "خطا در اعتبارسنجی", errors: error.array(), success:false });
+    //     }
+    //     const {
+    //         status
+    //     } = req.body
 
-        const {
-            id:ticketId
-        } = req.params
-        try {
-            const ticket = await TicketModel.findByIdAndUpdate( ticketId, {
-                status
-            })
-            if(ticket.type === "extend" && status==="accepted"){
-                const account = await UserModel.findById(ticket.userId).select("startTradeDay endTradeDay")
-                const [year, month, day] = new Date(new Date(account.startTradeDay).getTime() + 86400*1000).toLocaleDateString().split()
-                account.endTradeDay = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-                const user = await account.save()
-            }
-            if(!ticket){
-                return res
-                    .status(401)
-                    .send({ message: "درخواستی با مشخصات ارسال شده یافت نشد", result:null, success:false });
-            }
-            return res.status(200).json({
-                result:true,
-                message:"عملیات با موفقیت انجام شد",
-                success:true
-            })
-        }
-        catch(err){
-            return res
-                .status(401)
-                .send({ message: "درخواستی با مشخصات ارسال شده یافت نشد", result:null, success:false });
-        }
-    }
+    //     const {
+    //         id:ticketId
+    //     } = req.params
+    //     try {
+    //         const ticket = await TicketModel.findByIdAndUpdate( ticketId, {
+    //             status
+    //         })
+    //         if(ticket.type === "extend" && status==="accepted"){
+    //             const account = await UserModel.findById(ticket.userId).select("startTradeDay endTradeDay")
+    //             const [year, month, day] = new Date(new Date(account.startTradeDay).getTime() + 86400*1000).toLocaleDateString().split()
+    //             account.endTradeDay = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    //             const user = await account.save()
+    //         }
+    //         if(!ticket){
+    //             return res
+    //                 .status(401)
+    //                 .send({ message: "درخواستی با مشخصات ارسال شده یافت نشد", result:null, success:false });
+    //         }
+    //         return res.status(200).json({
+    //             result:true,
+    //             message:"عملیات با موفقیت انجام شد",
+    //             success:true
+    //         })
+    //     }
+    //     catch(err){
+    //         return res
+    //             .status(401)
+    //             .send({ message: "درخواستی با مشخصات ارسال شده یافت نشد", result:null, success:false });
+    //     }
+    // }
 
     async reply(req, res) {
         const error = validationResult(req)
@@ -164,7 +164,10 @@ class TicketController {
         const {
             title,
             description,
-            originId,
+            originId
+        } = req.body
+
+        let {
             originTicketStatus
         } = req.body
 
@@ -175,7 +178,9 @@ class TicketController {
 
         const resolverId = userRole==='admin' ? userId : undefined
         const type = userRole==='admin' ? 'answer' :'question'
-        
+        originTicketStatus = userRole==='admin' ? originTicketStatus : 'waiting'
+        const newTicketStatus =  userRole==='admin' ? originTicketStatus : 'waiting'
+
         try {
             const originTicket = await TicketModel.findById(originId)
             const allTicketsWay = await TicketModel.updateMany({"$or":[{originId:new mongoose.Types.ObjectId(originId)}, {_id:new mongoose.Types.ObjectId(originId)}]}, {status:originTicketStatus})
@@ -188,7 +193,8 @@ class TicketController {
                 isReply:true,
                 originId:originTicket._id,
                 resolverId,
-                accountId:originTicket.accountId
+                accountId:originTicket.accountId,
+                status:newTicketStatus
             })
             const ticketDoc = await newTicket.save()
 
@@ -206,6 +212,27 @@ class TicketController {
             })
         }
       
+    }
+
+    async close(req, res){
+        const { originId:id } = req.params
+        try {
+            const tickets = await TicketModel.updateMany({"$or":[{originId:new mongoose.Types.ObjectId(id)}, {_id:new mongoose.Types.ObjectId(id)}]}, {
+                status:'resolved'
+            })
+            return res.status(200).json({
+                result:true,
+                message:"عملیات با موفقیت انجام شد",
+                success:true
+            })
+        }
+        catch(err){
+            return res.send({
+                result:null,
+                success:false,
+                message:"خطا در دریافت اطلاعات"
+            })
+        }
     }
 
 }

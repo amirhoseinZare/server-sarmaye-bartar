@@ -9,7 +9,7 @@ const ticketSchema = new mongoose.Schema({
     type:{ type: String, required:true, enum:['question', 'answer'] },
     isReply: { type: Boolean, required:true, default:false },
     originId: { type: mongoose.Schema.Types.ObjectId, required:false },
-    status: { type: String, required:false, enum:["waiting", "resolved"] }
+    status: { type: String, required:true, enum:["waiting", "resolved"] }
 },{ timestamps: true });
 
 const TicketModel = mongoose.model("Ticket", ticketSchema);
