@@ -48,8 +48,10 @@ router.get("/account/by-email/:email", [auth("admin", "user")], UserController.g
 // not in use in production
 router.get("/update/type/user", UserController.test)  
 
-router.post("/update/manual/admin/objective", UserController.updateObjectiveManul)
+router.post("/update/manual/admin/objective", [auth("admin") ], UserController.updateObjectiveManul)
 
 router.get("/revalidate/provising-profiles", UserController.revalidateProvisingProfiles)
+
+// router.get("/chart/santitize/good/chart/best", UserController.chartSanitizer)
 
 module.exports = router;

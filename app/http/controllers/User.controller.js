@@ -1164,6 +1164,7 @@ Level: ${level}
             }) 
         }
         catch(error){
+            console.log(error)
             if(error.status===404){
                 return res.status(400).json({
                     success:false,
