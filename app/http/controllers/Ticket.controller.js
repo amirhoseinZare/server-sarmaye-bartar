@@ -23,7 +23,6 @@ class TicketController {
             if(status){
                 query.status = status
             }
-            console.log(new mongoose.Types.ObjectId(req.user._id))
             const allTickets = await TicketModel.find(query).skip(pageNumber*pageSize).limit(pageSize)
             const count = query.userId ||  query.type ? allTickets.length : await TicketModel.count()
             return res.status(200).json({
@@ -105,8 +104,8 @@ class TicketController {
             const ticketDoc = await newTicket.save()
 
             return res.status(201).json({
-                message: ticketDoc,
-                result: true,
+                message: 'تیکت شما با موفقیت ثبت شد.',
+                result:ticketDoc ,
                 success:true
             });
         }

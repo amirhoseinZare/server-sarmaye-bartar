@@ -1192,7 +1192,7 @@ Level: ${level}
             console.log('catch 2 ', new Date().toLocaleString())
             return res.send({
                 result:{
-                    chart:chart,
+                    chart:formatChart(chart, user),
                     objective:objective
                 },
                 success:true,
