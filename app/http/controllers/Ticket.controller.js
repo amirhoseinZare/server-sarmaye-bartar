@@ -23,7 +23,7 @@ class TicketController {
             if(status){
                 query.status = status
             }
-            const allTickets = await TicketModel.find(query).populate("userId resolverId accountId", "user_login display_name user_email accountEmail role accountType platform mtAccountId hasFailedMaxLoss hasFailedDailyLoss firstBalance dayBalance infinitive percentDays level type").skip(pageNumber*pageSize).limit(pageSize)
+            const allTickets = await TicketModel.find(query).populate("userId resolverId accountId", "user_login display_name user_email accountEmail role accountType platform mtAccountId hasFailedMaxLoss hasFailedDailyLoss firstBalance dayBalance infinitive percentDays level type").skip(pageNumber*pageSize).limit(pageSize).sort('-createdAt')
             const count = query.userId ||  query.type ? allTickets.length : await TicketModel.count()
             return res.status(200).json({
                 result:{
@@ -49,7 +49,7 @@ class TicketController {
     async getTicketReplies(req, res){
         const { originId:id } = req.params
         try {
-            const ticket = await TicketModel.findById(id)
+            const ticket = await TicketModel.findById(id).populate("userId resolverId accountId", "user_login display_name user_email accountEmail role accountType platform mtAccountId hasFailedMaxLoss hasFailedDailyLoss firstBalance dayBalance infinitive percentDays level type")
             const ticketReplies = await TicketModel.find({ originId:ticket._id }).populate("userId resolverId accountId", "user_login display_name user_email accountEmail role accountType platform mtAccountId hasFailedMaxLoss hasFailedDailyLoss firstBalance dayBalance infinitive percentDays level type").sort('-createdAt')
             return res.status(200).json({
                 result:{

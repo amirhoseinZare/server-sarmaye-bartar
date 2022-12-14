@@ -15,7 +15,7 @@ const {
     dailyDrawdonw,
     maxDrawdown
 } = require("../../core/emails");
-const { createUserAccountService, deployAccountService, unDeployAccountService, getProvisingProfilesService, deleteUserAccountService } = require("../../services/external/meta")
+const { createUserAccountService, deployAccountService, unDeployAccountService, getProvisingProfilesService, deleteUserAccountService, getMetaUserService, deActiveUserService } = require("../../services/external/meta")
 
 const getNowUTCDateInMetaFormat = (now)=>{
     return `${now.getFullYear()}-${now.getMonth().padStart(2)}-${now.getDate().padStart(2)} ${now.getHours().padStart(2)}-${now.getMinutes().padStart(2)}-${now.getSeconds().padStart(2)}`
@@ -669,7 +669,8 @@ Level: ${level}
             user_pass,
             maxLossLimit,
             status,
-            level
+            level,
+            metaUsername
             // accountCreatedDate,
         } = req.body
 
@@ -696,7 +697,8 @@ Level: ${level}
             endTradeDay,
             maxLossLimit,
             status,
-            level
+            level,
+            metaUsername
             // accountCreatedDate,
         }
         if(user_pass)
@@ -877,7 +879,8 @@ Level: ${level}
             accountEmail,
             status,
             type,
-            level
+            level,
+            createdAt
         } = req.user
         const userObject = {
             accountType,
@@ -904,7 +907,8 @@ Level: ${level}
             status,
             type,
             level,
-            endTradeDay
+            endTradeDay,
+            createdAt
         }
         return res.status(200).json({
             result:userObject, message:"عملیات با موفقیت انجام شد", success:true
@@ -1082,7 +1086,7 @@ Level: ${level}
 
         const { userId:accountId } = req.params
         redis = getRedisClient()
-        const user = await UserModel.findOne({mtAccountId:accountId, ...orQuery}, {  tradeDaysCount:1, user_login:1, user_email:1, metaUsername:1, mtAccountId:1, firstBalance:1, startTradeDay:1, percentDays:1, hasFailedDailyLoss:1, hasFailedMaxLoss:1, maxLossLimit:1, maxTradeDays:1, trackerId:1 })
+        const user = await UserModel.findOne({mtAccountId:accountId, ...orQuery}, {  tradeDaysCount:1, user_login:1, user_email:1, metaUsername:1, mtAccountId:1, firstBalance:1, startTradeDay:1, percentDays:1, hasFailedDailyLoss:1, hasFailedMaxLoss:1, maxLossLimit:1, maxTradeDays:1, trackerId:1, status:1 })
             .catch(err=>{
                 res.send({
                     result:null,
@@ -1097,7 +1101,7 @@ Level: ${level}
                 success:false
             })
         }
-        const { firstBalance, startTradeDay, percentDays, hasFailedDailyLoss, hasFailedMaxLoss, maxLossLimit, mtAccountId, maxTradeDays, _id:userId, trackerId } = user
+        const { firstBalance, startTradeDay, percentDays, hasFailedDailyLoss, hasFailedMaxLoss, maxLossLimit, mtAccountId, maxTradeDays, _id:userId, trackerId, status } = user
         
         try {
             let chart = []
@@ -1105,7 +1109,7 @@ Level: ${level}
             let tradeDaysObjective
             console.log('try 0 ', new Date().toLocaleString())
             const nowUTCMinutes = new Date().getUTCMinutes()
-            if(false){
+            if(status === 'deactive'){
                 const data = await getChartFromMemory({accountId})
                 chart = data.chart
                 maxDailyLossObjective = [data.objective] || null
@@ -1126,7 +1130,6 @@ Level: ${level}
                     }))
                 }
                 const [chartData, objectiveData] = await Promise.all(promises)
-                console.log({chartData})
                 chart = chartData.data
                 maxDailyLossObjective = objectiveData?.data || []
                 tradeDaysObjective = {
@@ -1368,6 +1371,26 @@ Level: ${level}
             success:true
         })
     }
+
+    async reportUserrrrrrrrrrrrrrr(req, res){
+        const twoMonthesAgo = new Date().getTime() - 1000 * 86400 * 60
+
+        const users = await UserModel
+            .find({
+                role:'user',
+                createdAt:{ "$lt" : new Date(twoMonthesAgo).toISOString() },
+                status : 'active'
+            })
+            .select("firstBalance dayBalance maxTradeDays percentDays infinitive accountType mtAccountId accountCreatedDate tradeDaysCount equity balance hasFailedDailyLoss hasFailedMaxLoss maxLossLimit metaUsername type trackerId standardType user_login display_name level status createdAt accountEmail")
+            // .sort("-createdAt")
+            .limit(1)
+
+            console.log("id: ", users[0]._id)
+            deActiveUserService({id:users[0]._id})
+
+        return res.json(users)
+    }
+
 
 }
 

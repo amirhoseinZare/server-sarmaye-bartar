@@ -50,6 +50,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateToken = function () {
     const data = {
       id: this._id,
+      kossherAmniati:'kossherAmniati'
     };
     const bas64EncodedData = Buffer.from(JSON.stringify(data)).toString('base64')
     const token = jwt.sign(bas64EncodedData, getJwtSecret());

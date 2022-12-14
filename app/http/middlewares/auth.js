@@ -13,7 +13,11 @@ module.exports = (...role) => {
 
       const decodedJwt = jwt.verify(token, getJwtSecret())
       const decodedBase64 = Buffer.from(decodedJwt, 'base64').toString()
-      const userId = JSON.parse(decodedBase64).id
+      const parsedToken = JSON.parse(decodedBase64)
+      const userId = parsedToken.id
+      if(parsedToken.kossherAmniati !== 'kossherAmniati')
+        return res.status(401).send({ message: "توکن شما اکسپایر شده است", result:null, resultCode:1001, success:false });
+
       let user = null
       try {
         user = await UserModel.findById(userId).select("-user_pass  -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url ")

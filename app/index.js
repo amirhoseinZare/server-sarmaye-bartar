@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const Routes = require("./http/routes/index");
 const { UserModel } = require("./models/index")
 const { minimumTradingDays, saveEquityAndBalance, saveDayBalance, readUsersFromCsv, test, revalidateUSers } = require("./core/cornJobs")
+const { deleteUserFromMetaAndSaveUserDataInCache } = require("./core/objectiveCronJob")
 const path = require("path")
 const { connectRedis, getRedisClient } = require("./core/redis")
 
@@ -14,6 +15,7 @@ class Application {
     this.setUpRoutesAndMiddlewares();
     this.setUpServer();
     this.setUpDataBase();
+    this.setUpCronJobs();
   }
 
   setUpRoutesAndMiddlewares() {
@@ -45,24 +47,19 @@ class Application {
   }
                                                                                                                                                                                                                                                                                    
   setUpServer() {
-    // starting the server
     const port = process.env.PROJECT_PORT || 8000;
     var server = app.listen(port, (err) => {
       if (err) throw err;
       console.log("App is listening to port " + port);
     });
-    // io.initIo()
-    // io.getIo().on('connection', socket => {
-    //   console.log('client connected')
-    // });
   }
 
   setUpDataBase() {
     connectRedis()
     //production
     /* stage */     
-    const dbURI = "mongodb://root:EMtjBpbXkC6jTQnXqeBfnL5H@tommy.iran.liara.ir:34627/sb-stage?authSource=admin"
-    // const dbURI = "mongodb://root:EMtjBpbXkC6jTQnXqeBfnL5H@tommy.iran.liara.ir:34627/sb?authSource=admin"
+    // const dbURI = "mongodb://root:EMtjBpbXkC6jTQnXqeBfnL5H@tommy.iran.liara.ir:34627/sb-stage?authSource=admin"
+    const dbURI = "mongodb://root:EMtjBpbXkC6jTQnXqeBfnL5H@tommy.iran.liara.ir:34627/sb?authSource=admin"
     const dbAdress =
       process.env.DB_ADRESS ||  dbURI
     //test 
@@ -83,6 +80,10 @@ class Application {
       .catch((err) => {
         console.log(err)
       });
+  }
+
+  setUpCronJobs() {
+    deleteUserFromMetaAndSaveUserDataInCache()
   }
 }
 
