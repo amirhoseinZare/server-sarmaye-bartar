@@ -779,7 +779,7 @@ Level: ${level}
               .status(400)
               .send({ result:null, message: "خطا در اعتبارسنجی", errors: error.array(), success:false });
         }
-        const user = await UserModel.findOne({ user_email:user_email.trim(), type:"primary" }).select("-minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url");
+        const user = await UserModel.findOne({ user_email:user_email.trim(), type:"primary" })
         const accounts = await UserModel.find({ accountEmail:user_email}).select("-user_pass  -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url ")
 
         if (!user) {
@@ -787,12 +787,12 @@ Level: ${level}
             .status(401)
             .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result:null, success:false });
         }
-        // const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
-        // if (!checkPass) {
-        // return res
-        //     .status(401)
-        //     .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result:null, success:false });
-        // }
+        const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
+        if (!checkPass) {
+        return res
+            .status(401)
+            .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result:null, success:false });
+        }
         const token = user.generateToken();
         delete user.user_pass
         const {
@@ -1385,8 +1385,12 @@ Level: ${level}
             // .sort("-createdAt")
             .limit(1)
 
-            console.log("id: ", users[0]._id)
-            deActiveUserService({id:users[0]._id})
+            const { 
+                _id,
+                createdAt,
+                mtAccountId
+             } = users[0]
+            deActiveUserService({id:"62d2d03d32d3d8001363bf21", mtAccountId:"c22f9197-b45d-42d9-a183-93c9dd4c73be"})
 
         return res.json(users)
     }

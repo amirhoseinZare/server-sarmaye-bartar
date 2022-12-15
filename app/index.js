@@ -4,8 +4,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const Routes = require("./http/routes/index");
 const { UserModel } = require("./models/index")
-const { minimumTradingDays, saveEquityAndBalance, saveDayBalance, readUsersFromCsv, test, revalidateUSers } = require("./core/cornJobs")
-const { deleteUserFromMetaAndSaveUserDataInCache } = require("./core/objectiveCronJob")
+const { deActiveUser, removeUndeployedAccounts } = require("./core/cornJobs")
+const { deleteUserFromMetaAndSaveUserDataInCache,  } = require("./core/objectiveCronJob")
 const path = require("path")
 const { connectRedis, getRedisClient } = require("./core/redis")
 
@@ -83,7 +83,8 @@ class Application {
   }
 
   setUpCronJobs() {
-    deleteUserFromMetaAndSaveUserDataInCache()
+    // deActiveUser()
+    removeUndeployedAccounts()
   }
 }
 

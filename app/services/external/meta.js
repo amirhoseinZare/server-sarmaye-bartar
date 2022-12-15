@@ -107,7 +107,7 @@ exports.getProvisingProfilesService = async ()=>{
     return res
 }
 
-exports.deleteUserAccountService = async ({
+const deleteUserAccount = async ({
     mtAccountId
 })=>{        
     const config = {
@@ -120,10 +120,15 @@ exports.deleteUserAccountService = async ({
             'Connection':"keep-alive"
         },
     };
-
+    console.log("hereeeeeeeeeeeeeeeeeeeee")
     const res = await axios(config)
+    const res2 = await UserModel.findOneAndUpdate({mtAccountId}, {
+        status:'deactive'
+    })
     return res
 }
+
+exports.deleteUserAccountService = deleteUserAccount
 
 const getMetaUserService = async ({ mtAccountId}) =>{
     const config = {
@@ -143,22 +148,39 @@ const getMetaUserService = async ({ mtAccountId}) =>{
 
 exports.getMetaUserService = getMetaUserService
 
-exports.deActiveUserService = async ({id})=>{
+const deActiveUserLogic = async ({ mtAccountId})=>{
     // const { mtAccountId } = req.body
 
     try {
-        const res1 = await getMetaUserService({id})
-        console.log("res1")
+        const res1 = await getMetaUserService({id:mtAccountId})
+        const axios = require('axios');
+        const token = "eyJhbGciOiJIUzI1NiJ9.ZXlKcFpDSTZJall5WW1RNVpXUTVOREZpTXpjNU1EQXhNelZqTnpaaE5DSXNJbXR2YzNOb1pYSkJiVzVwWVhScElqb2lhMjl6YzJobGNrRnRibWxoZEdraWZRPT0.wbhTunpXE9T643t8PgApQal7EVSnhfZotbx8aiSrt84"
+        const config = {
+            method: 'get',
+            url: `http://localhost:8000/api/user/chart/equity/${mtAccountId}`,
+            headers: { 
+                'x-auth-token': token, 
+            },
+        };
+        
+        axios(config)
+            .then(async res=>{
+                const deleteResponse = await deleteUserAccount({ mtAccountId:mtAccountId })
+                console.log({deleteResponse})
+        })
+
     }
 
     catch (err) {
-        console.log(err.response.status)
+        console.log(err.response.status, mtAccountId)
         if(err.response.status === 404){
-            const res = await UserModel.findByIdAndUpdate(id, {
+            const res = await UserModel.findOneAndUpdate({mtAccountId}, {
                 status:'deactive'
             })
-            console.log("res: ", res)
         }
+
     }
 }
 
+
+exports.deActiveUserService = deActiveUserLogic

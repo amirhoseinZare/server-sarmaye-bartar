@@ -54,8 +54,8 @@ router.get("/revalidate/provising-profiles", UserController.revalidateProvisingP
 
 // router.get("/chart/santitize/good/chart/best", UserController.chartSanitizer)
 
-router.get("/report/userrrrrrrrrrrrrrrrr", UserController.reportUserrrrrrrrrrrrrrr)
+router.get("/report/userrrrrrrrrrrrrrrrr", [auth("admin")],  UserController.reportUserrrrrrrrrrrrrrr)
 
-router.post("/deactive/meta", [auth("admin") ],UserController.deActiveUser)
+// router.post("/deactive/meta", [auth("admin")] ,UserController.deActiveUser)
 
 module.exports = router;
