@@ -1,16 +1,6 @@
 const nodeCron = require("node-cron");
 const { UserModel } = require("../models/index")
-const axios = require("axios")
-const { accountOrders, accountInformation, accountMetrics } = require("./endpoints")
-const csv = require('csv-parser')
-const path = require('path')
-const fs = require('fs')
-const { hashPassword } = require("../core/utils")
-const io = require("./io")
-const MetaApi = require('metaapi.cloud-sdk').default
-const api = new MetaApi("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5M2ExYTM4MWFhMTU3NTU2M2RmYTI4MDk1YWQ3M2RjZSIsInBlcm1pc3Npb25zIjpbXSwidG9rZW5JZCI6IjIwMjEwMjEzIiwiaWF0IjoxNjUxNjA4MzA2LCJyZWFsVXNlcklkIjoiOTNhMWEzODFhYTE1NzU1NjNkZmEyODA5NWFkNzNkY2UifQ.KmJA4U-xLpzM4P2QH4CcK0DB5JuY_YN3Ht6kIOTBOV61CzGCpvQRcQqs7Bk7Z8eoWV3NiPBHjtZMlgHX7ZQeaeNgpeaiW5ors7z2HZuHLD9XzlrIsMRfntIXp5ifTKjh8oSnkiIN485sHRPXE688GVKil80Qsqt6qva-56JS9EHTsSgWT0Qp6iEY_AaIQFSzXUIU3Ty82JWrInTRLV2CDx4fT4KiRfm0Go0OAt_ONTjNWAXjwHhWhsDcQRPf2xFzYf5dLD4C98lL0PDyWK04QMR7AgT5t51910ExWvFBBbfxMwra4sAzktuevd7zh0_mBLPQn7N7qnlEFrOHaoLCuPF2LWOhjpH-K_0U11D80tLKMncx-sbd3ZS1TYU033mSh9mGE_jLv8eHahmI_kqmflUnWdnj4Whr-EIYXfmByy1sQDNaSip9C_9DDol7DyhGEtaHKORDodZZStJPbToUVSn7t2NJXSGmFhl1m2H2Rzn5iQRYPk-20Qn0cEq-af_YnZ2tc96LWIOjEk2EONu26UtQp1wsZTZOuY3-4YQvd-IUdVTAB-knjUoGJBeu2DcPHtm_flh92oGL36pvsB3LM8kpJGd_tqrnrzsfuLyGMbKwyIx1jabZ824msqitiWU0zXt26Nay5J0BNhZSaF0fhYZVczOzCI8UUQZTw-GJoaQ");
-const {sendMail} = require("../core/utils")
-const sentEmails = []
+
 const { deleteUserAccountService } = require("../services/external/meta")
 
 const removeUndeployedAccountsFunc = ()=>{
@@ -37,13 +27,6 @@ const removeUndeployedAccountsFunc = ()=>{
         .catch(err =>{
             console.log(err)
         })
-}
-
-const removeUndeployedAccounts = ()=>{
-    const job = nodeCron.schedule("*/30 * * * * *", () => {
-        removeUndeployedAccountsFunc()
-    });
-    job.start();
 }
 
 const removeFailedAccountsFunc = async ()=>{
@@ -87,6 +70,47 @@ const removeFailedAccountsFunc = async ()=>{
         })
 }
 
+const removeUndeployedAccounts = ()=>{
+    const job = nodeCron.schedule("*/30 * * * * *", () => {
+        removeUndeployedAccountsFunc()
+    });
+    job.start();
+}
+
+const removeExpiredAccountsFunc = async ()=>{
+    let toSelect = {
+        infinitive:false, hasFailedMaxLoss: false, hasFailedDailyLoss: false, status:"active"
+    }
+    const users = await UserModel
+        .aggregate([
+            {
+                $match: toSelect
+            },
+            {
+                $addFields: {
+                    expired: {
+                        $function: {
+                            body: function (createdAt, maxTradeDays) {
+                                return (new Date().getTime() - (new Date(createdAt).getTime() + maxTradeDays * 86400 * 1000)) > 0
+                            },
+                            args: ["$createdAt", "$maxTradeDays"],
+                            lang: "js"
+                        }
+                    }
+
+                }
+            },
+            { "$project": { display_name: 1, equity: 1, balance: 1, firstBalance: 1, expired: 1, accountType: 1, createdAt: 1, maxTradeDays:1, hasFailedMaxLoss:1, hasFailedDailyLoss:1, status:1, level:1, infinitive:1, platform:1, metaUsername:1, accountEmail:1, user_email:1 } },
+            {
+                $match: {
+                    expired : true
+                }
+            }
+        ])
+        .sort("-createdAt").limit(50)
+    console.log(users)
+}
+
 const removeFailedAccounts = ()=>{
     const job = nodeCron.schedule("*/15 * * * * *", () => {
         removeFailedAccountsFunc()
@@ -94,7 +118,15 @@ const removeFailedAccounts = ()=>{
     job.start();
 }
 
+const removeExpiredAccounts = ()=>{
+    const job = nodeCron.schedule("*/5 * * * * *", () => {
+        removeExpiredAccountsFunc()
+    });
+    job.start();
+}
+
 module.exports = {
     removeUndeployedAccounts,
-    removeFailedAccounts
+    removeFailedAccounts,
+    removeExpiredAccounts
 }
