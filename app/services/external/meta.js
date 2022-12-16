@@ -26,8 +26,6 @@ exports.createUserAccountService = async ({
         tags: [
             "automate"
         ],
-        extensions: [
-        ],
         metadata: {},
         reliability: "high",
         resourceSlots: 1,
