@@ -401,7 +401,7 @@ const findServerByAccountTypeAndPlatform = ({profiles, accountType, platform})=>
 
 class UserController {
     async getAll(req, res){
-        let { pageSize=20 , pageNumber=1, user_email="", display_name="", level="", user_login="", platform="", accountType="", metaUsername="", standardType="", hasFailedMaxLoss, hasFailedDailyLoss } = req.query
+        let { pageSize=20 , pageNumber=1, user_email="", display_name="", level="", user_login="", platform="", accountType="", metaUsername="", standardType="", hasFailedMaxLoss, hasFailedDailyLoss, status } = req.query
         pageSize = +pageSize
         pageNumber = +pageNumber
         pageNumber = pageNumber-1
@@ -436,7 +436,8 @@ class UserController {
             query.hasFailedMaxLoss = convertStringToBoolean(hasFailedMaxLoss)
         if(hasFailedDailyLoss==='false' || hasFailedDailyLoss==='true')
             query.hasFailedDailyLoss = convertStringToBoolean(hasFailedDailyLoss)
-        console.log(query)
+        if(status)
+            query.status = status
         const allUsers = await UserModel.find(query).skip(pageNumber*pageSize).limit(pageSize).select("-user_pass -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url")
         const count = await UserModel.count(query)
         return res.status(200).json({
@@ -1309,7 +1310,7 @@ Level: ${level}
         users.forEach(user=>{
             const config = {
                 method: 'get',
-                url: `http://localhost:8000/api/user/chart/equity/${user.mtAccountId}`,
+                url: `https://panel.sarmayegozarebartar.com/api/user/chart/equity/${user.mtAccountId}`,
                 headers: { 
                     'x-auth-token': 'eyJhbGciOiJIUzI1NiJ9.ZXlKcFpDSTZJall5TkdWbE5tTTVaV1psWWpsbU5HVTVPREEyTmpka05pSjk.yqZCgM1gI7HL08VIgKbGOJ06t3_jlXt056Dz1J67hcg'
                 }

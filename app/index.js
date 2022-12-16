@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const Routes = require("./http/routes/index");
 const { UserModel } = require("./models/index")
-const { deActiveUser, removeUndeployedAccounts } = require("./core/cornJobs")
+const { revalidateUsers, removeUndeployedAccounts } = require("./core/cornJobs")
 const { deleteUserFromMetaAndSaveUserDataInCache,  } = require("./core/objectiveCronJob")
 const path = require("path")
 const { connectRedis, getRedisClient } = require("./core/redis")
@@ -76,6 +76,8 @@ class Application {
       })
       .then(() => {
         console.log("Db connected ,");
+        removeUndeployedAccounts()
+        // revalidateUsers()
       })
       .catch((err) => {
         console.log(err)
@@ -84,7 +86,7 @@ class Application {
 
   setUpCronJobs() {
     // deActiveUser()
-    removeUndeployedAccounts()
+    console.log("initializa")
   }
 }
 

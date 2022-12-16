@@ -157,7 +157,7 @@ const deActiveUserLogic = async ({ mtAccountId})=>{
         const token = "eyJhbGciOiJIUzI1NiJ9.ZXlKcFpDSTZJall5WW1RNVpXUTVOREZpTXpjNU1EQXhNelZqTnpaaE5DSXNJbXR2YzNOb1pYSkJiVzVwWVhScElqb2lhMjl6YzJobGNrRnRibWxoZEdraWZRPT0.wbhTunpXE9T643t8PgApQal7EVSnhfZotbx8aiSrt84"
         const config = {
             method: 'get',
-            url: `http://localhost:8000/api/user/chart/equity/${mtAccountId}`,
+            url: `https://panel.sarmayegozarebartar.com/api/user/chart/equity/${mtAccountId}`,
             headers: { 
                 'x-auth-token': token, 
             },

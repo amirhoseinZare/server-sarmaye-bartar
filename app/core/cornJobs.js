@@ -360,12 +360,12 @@ const readUsersFromCsv = ()=>{
 
 }
 
-const revalidateUSers = ()=>{
+const revalidateUsers = ()=>{
     //every day at 01:30
     const job = nodeCron.schedule("00 */1 * * * *", function jobYouNeedToExecute() {
         // every minutes
-        console.log('revalidateUSers=> ', new Date().toLocaleString());
-        setUsers()
+        console.log('revalidateUsers=> ', new Date().toLocaleString());
+        // setUsers()
     });
     job.start();
 }
@@ -378,7 +378,7 @@ const deActiveUser = ()=>{
         console.log('deActiveUser=> ', new Date().toLocaleTimeString(), new Date().toLocaleDateString(),);
         const config = {
             method: 'get',
-            url: `http://localhost:8000/api/user/report/userrrrrrrrrrrrrrrrr`,
+            url: `https://panel.sarmayegozarebartar.com/api/user/report/userrrrrrrrrrrrrrrrr`,
             headers: { 
                 'x-auth-token': token, 
             },
@@ -392,33 +392,38 @@ const deActiveUser = ()=>{
     job.start();
 }
 
-const removeUndeployedAccounts = async ()=>{
-    const job = nodeCron.schedule("00 */1 * * * *", function jobYouNeedToExecute() {
-        // const user = await UserModel.findOne({ mtAccountId:firstAccount.mtAccountId })
-        const axios = require('axios');
-        const token = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5M2ExYTM4MWFhMTU3NTU2M2RmYTI4MDk1YWQ3M2RjZSIsInBlcm1pc3Npb25zIjpbXSwidG9rZW5JZCI6IjIwMjEwMjEzIiwiaWF0IjoxNjU3Nzk2MjY1LCJyZWFsVXNlcklkIjoiOTNhMWEzODFhYTE1NzU1NjNkZmEyODA5NWFkNzNkY2UifQ.Uo1bOKN39o-zPJj1HrFbk25b4EEJyixpo89TOW0jNQcjBCpotnGXJBF2W1oCxULVJqNAOYRqL6cMd_iWjNFHlbr5riF30Bj5R_PaoPTL7nB8VO8h_NHV7yQER3JdLFpOwFa3prsFs5DU33bvV6eesiLWNMicaVhwpA5-LJuRSKz-_CMwlGlgiySVJmgzj30LnVVhfjjyhXZmD_rdq7cIjSCZbWIk4hCGy1kaZooIzz3PeR36s205v90u7_M2QTQLi_LBDRpD0H67ny6MvQolIlyfwNYvkn3eke11hKkolamZ0YQlCVXFbKsZlON4DW9zGlZbfEa-VhILAIYvY1Nja8z09QXwPlBknA6XE89XMOrDdM1qySh_ClsoNVhCVPlPLT2gDdc9nVQj5XRCVwHtrYgAOqcwtOAoxNLeEywhVPJBiI1arULcu7-Z0uL9aN6Y4oR5vyca4-n02xeJtbkiOKz1xQcmTk5iTTTSh14iino7QhBdB4VB0_yvAZo9KCW18eB9I8YDJKg79AfXBoRS4x9w_eDE1QkrjgdPmSALWYM6UmPnTPXJNcqwAX9obQ7UVrxkHjx5LCPw8Tyqa68JnYCV6vQC3FdTijr_ZmdSPPQh-dvem_GxrMbF7ouLhIy9rCMNsB_b4qp0HngIfIBZdJ5tqvMEQJM89IECVnRelMU"
-        const config = {
-            method: 'get',
-            url: `https://mt-provisioning-api-v1.agiliumtrade.agiliumtrade.ai/users/current/accounts?offset=0&limit=1&endpointVersion=v1&state=UNDEPLOYED`,
-            headers: { 
-                'auth-token': token, 
-            },
-        };
-            
-        axios(config)
-            .then(res=>{
-                if(res.data.length>0 && res.data[0]._id){
-                    deleteUserAccountService({ mtAccountId:res.data[0]._id })
-                    console.log("user deleted: ", res.data[0]._id)
-                }
+const removeUndeployedAccountsFunc = ()=>{
+    console.log("removeUndeployedAccountsFunc", new Date().toLocaleString())
+    const axios = require('axios');
+    const token = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5M2ExYTM4MWFhMTU3NTU2M2RmYTI4MDk1YWQ3M2RjZSIsInBlcm1pc3Npb25zIjpbXSwidG9rZW5JZCI6IjIwMjEwMjEzIiwiaWF0IjoxNjU3Nzk2MjY1LCJyZWFsVXNlcklkIjoiOTNhMWEzODFhYTE1NzU1NjNkZmEyODA5NWFkNzNkY2UifQ.Uo1bOKN39o-zPJj1HrFbk25b4EEJyixpo89TOW0jNQcjBCpotnGXJBF2W1oCxULVJqNAOYRqL6cMd_iWjNFHlbr5riF30Bj5R_PaoPTL7nB8VO8h_NHV7yQER3JdLFpOwFa3prsFs5DU33bvV6eesiLWNMicaVhwpA5-LJuRSKz-_CMwlGlgiySVJmgzj30LnVVhfjjyhXZmD_rdq7cIjSCZbWIk4hCGy1kaZooIzz3PeR36s205v90u7_M2QTQLi_LBDRpD0H67ny6MvQolIlyfwNYvkn3eke11hKkolamZ0YQlCVXFbKsZlON4DW9zGlZbfEa-VhILAIYvY1Nja8z09QXwPlBknA6XE89XMOrDdM1qySh_ClsoNVhCVPlPLT2gDdc9nVQj5XRCVwHtrYgAOqcwtOAoxNLeEywhVPJBiI1arULcu7-Z0uL9aN6Y4oR5vyca4-n02xeJtbkiOKz1xQcmTk5iTTTSh14iino7QhBdB4VB0_yvAZo9KCW18eB9I8YDJKg79AfXBoRS4x9w_eDE1QkrjgdPmSALWYM6UmPnTPXJNcqwAX9obQ7UVrxkHjx5LCPw8Tyqa68JnYCV6vQC3FdTijr_ZmdSPPQh-dvem_GxrMbF7ouLhIy9rCMNsB_b4qp0HngIfIBZdJ5tqvMEQJM89IECVnRelMU"
+    const config = {
+        method: 'get',
+        url: `https://mt-provisioning-api-v1.agiliumtrade.agiliumtrade.ai/users/current/accounts?offset=0&limit=1&endpointVersion=v1&state=UNDEPLOYED`,
+        headers: { 
+            'auth-token': token, 
+        },
+    };
+        
+    axios(config)
+        .then(res=>{
+            console.log("removeUndeployedAccountsFunc", res.data.length>0 && res.data[0]._id)
+            if(res.data.length>0 && res.data[0]._id){
+                deleteUserAccountService({ mtAccountId:res.data[0]._id })
+                console.log("user deleted: ", res.data[0]._id)
+            }
 
-            })
-            .catch(err =>{
-                console.log(err)
-            })
+        })
+        .catch(err =>{
+            console.log(err)
+        })
+}
+
+const removeUndeployedAccounts = ()=>{
+    console.log("here")
+    const job = nodeCron.schedule("*/30 * * * * *", () => {
+        removeUndeployedAccountsFunc()
     });
     job.start();
-
 }
 
 module.exports = {
@@ -426,7 +431,7 @@ module.exports = {
     saveEquityAndBalance,
     saveDayBalance,
     readUsersFromCsv,
-    revalidateUSers,
+    revalidateUsers,
     deActiveUser,
     removeUndeployedAccounts
 }
