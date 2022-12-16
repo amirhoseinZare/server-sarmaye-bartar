@@ -430,12 +430,13 @@ class UserController {
             query["$or"].push({accountEmail: user_email})
         }
 
-        console.log(convertStringToBoolean(anyObjectiveFailed))
-        
         if(convertStringToBoolean(anyObjectiveFailed)) {
             query["$or"].push({hasFailedDailyLoss: true})
             query["$or"].push({hasFailedMaxLoss: true})
         }
+
+        if(query["$or"].length ===0)
+            delete query["$or"]
 
         if (display_name)
             query.display_name = display_name
@@ -457,7 +458,6 @@ class UserController {
             query.hasFailedDailyLoss = convertStringToBoolean(hasFailedDailyLoss)
         if (status)
             query.status = status
-        console.log(query)
         const allUsers = await UserModel.find(query).skip(pageNumber * pageSize).limit(pageSize).select("-user_pass -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url")
         const count = await UserModel.count(query)
         return res.status(200).json({
@@ -936,6 +936,7 @@ Level: ${level}
         })
     }
 
+    // not is use
     async getAllObjectives(req, res) {
         // not is use
         const { userId } = req.params
@@ -1415,7 +1416,6 @@ Level: ${level}
 
         return res.json(users)
     }
-
 
 }
 
