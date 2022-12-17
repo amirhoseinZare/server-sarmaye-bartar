@@ -118,12 +118,19 @@ const deleteUserAccount = async ({
             'Connection':"keep-alive"
         },
     };
-    console.log("hereeeeeeeeeeeeeeeeeeeee")
-    const res = await axios(config)
-    const res2 = await UserModel.findOneAndUpdate({mtAccountId}, {
-        status:'deactive'
-    })
-    return res
+    try {
+        const res = await axios(config)
+        const res2 = await UserModel.findOneAndUpdate({mtAccountId}, {
+            status:'deactive'
+        }) 
+        return res2
+    }
+    catch (err) {
+        const res2 = await UserModel.findOneAndUpdate({mtAccountId}, {
+            status:'deactive'
+        }) 
+        return res2
+    }
 }
 
 exports.deleteUserAccountService = deleteUserAccount
@@ -179,6 +186,5 @@ const deActiveUserLogic = async ({ mtAccountId})=>{
 
     }
 }
-
 
 exports.deActiveUserService = deActiveUserLogic

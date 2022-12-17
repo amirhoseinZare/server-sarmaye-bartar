@@ -307,6 +307,11 @@ const updateObjective = ({ userName, metaUsername, user_email, tradeDaysCount, m
 
     let endTradeDay = ''
     if (maxTradeDays > 0) {
+        console.log({firstTradeDay})
+        if(firstTradeDay === '-' || !firstTradeDay){
+            endTradeDay = '-'
+            return
+        }
         if (firstTradeDay)
             endTradeDay = new Date(new Date(firstTradeDay).getTime() + (86400 * 1000 * maxTradeDays)).toISOString().split("T")[0]
     }
