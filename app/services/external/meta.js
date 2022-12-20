@@ -108,6 +108,7 @@ exports.getProvisingProfilesService = async ()=>{
 const deleteUserAccount = async ({
     mtAccountId
 })=>{        
+
     const config = {
         method: 'delete',
         url: `https://mt-provisioning-api-v1.agiliumtrade.agiliumtrade.ai/users/current/accounts/${mtAccountId}?executeForAllReplicas=true`,

@@ -84,13 +84,6 @@ const removeFailedAccountsFunc = async ()=>{
   
 }
 
-const removeUndeployedAccounts = ()=>{
-    const job = nodeCron.schedule("00 */1 * * * *", () => {
-        removeUndeployedAccountsFunc()
-    });
-    job.start();
-}
-
 const removeExpiredAccountsFunc = async ()=>{
     console.log("removeExpiredAccountsFunc")
     let toSelect = {
@@ -116,7 +109,7 @@ const removeExpiredAccountsFunc = async ()=>{
 
                 }
             },
-            { "$project": { mtAccountId:1, expired: 1, createdAt: 1, maxTradeDays:1, } },
+            { "$project": { mtAccountId:1, expired: 1, createdAt: 1, maxTradeDays:1, infinitive:1 } },
             {
                 $match: {
                     expired : true
@@ -125,9 +118,18 @@ const removeExpiredAccountsFunc = async ()=>{
         ])
         .sort("-createdAt")
         // .limit(1)
+        console.log(users.length)
     if(users.length >0) {
         const user = users[0]
-        
+        if(user.infinitive)
+            return
+        if(user.mtAccountId.length !== 32){
+            console.log('mtAccountId invalied')
+            const result = await UserModel.findByIdAndUpdate(user._id, {
+                status:'deactive'
+            }) 
+            return result
+        }
         const axios = require('axios');
         const token = "eyJhbGciOiJIUzI1NiJ9.ZXlKcFpDSTZJall5WW1RNVpXUTVOREZpTXpjNU1EQXhNelZqTnpaaE5DSXNJbXR2YzNOb1pYSkJiVzVwWVhScElqb2lhMjl6YzJobGNrRnRibWxoZEdraWZRPT0.wbhTunpXE9T643t8PgApQal7EVSnhfZotbx8aiSrt84"
         const config = {
@@ -142,7 +144,7 @@ const removeExpiredAccountsFunc = async ()=>{
             .then(res=>{
                 if(res.data.success){
                     deleteUserAccountService({ mtAccountId:user.mtAccountId })
-                    console.log("removeExpiredAccountsFunc", user.mtAccountId, user.createdAt, user.maxTradeDays)
+                    console.log("removeExpiredAccountsFunc", user.mtAccountId, user.createdAt, user.maxTradeDays, {infi:user.infinitive})
                 }
     
             })
@@ -150,6 +152,13 @@ const removeExpiredAccountsFunc = async ()=>{
                 console.log(err)
             })
     }
+}
+
+const removeUndeployedAccounts = ()=>{
+    const job = nodeCron.schedule("00 */1 * * * *", () => {
+        removeUndeployedAccountsFunc()
+    });
+    job.start();
 }
 
 const removeFailedAccounts = ()=>{
