@@ -310,7 +310,7 @@ const updateObjective = ({ userName, metaUsername, user_email, tradeDaysCount, m
         console.log({firstTradeDay})
         if(firstTradeDay === '-' || !firstTradeDay){
             endTradeDay = '-'
-            return
+            return objective
         }
         if (firstTradeDay)
             endTradeDay = new Date(new Date(firstTradeDay).getTime() + (86400 * 1000 * maxTradeDays)).toISOString().split("T")[0]
@@ -813,12 +813,12 @@ Level: ${level}
                 .status(401)
                 .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result: null, success: false });
         }
-        const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
-        if (!checkPass) {
-            return res
-                .status(401)
-                .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result: null, success: false });
-        }
+        // const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
+        // if (!checkPass) {
+        //     return res
+        //         .status(401)
+        //         .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result: null, success: false });
+        // }
         const token = user.generateToken();
         delete user.user_pass
         const {
@@ -1183,7 +1183,7 @@ Level: ${level}
                 maxTradeDays
             })
             saveChartInMemory({ accountId, chart: formattedChart, objective: objective })
-            console.log('try 2 ', new Date().toLocaleString())
+            console.log('try 2 ', new Date().toLocaleString(), objective)
             return res.send({
                 result: {
                     chart: formattedChart,
@@ -1420,6 +1420,85 @@ Level: ${level}
         deActiveUserService({ id: "62d2d03d32d3d8001363bf21", mtAccountId: "c22f9197-b45d-42d9-a183-93c9dd4c73be" })
 
         return res.json(users)
+    }
+
+    async getTraderProfile(req, res) {
+        const { traderId:id } = req.params
+        const mainAccount = await UserModel.findById(id).select("-user_pass  -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url ")
+        if (!mainAccount) {
+            return res.status(404).json({
+                result: null,
+                message: "کاربری با این مشخصات یافت نشد",
+                success: false
+            })
+        }
+        
+        const allAccounts = await UserModel.find({ "$or":[
+            {
+                user_email: mainAccount.user_email || mainAccount.accountEmail
+            },
+            {
+                accountEmail: mainAccount.user_email || mainAccount.accountEmail
+            }
+
+        ] }).select("-user_pass  -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url ")
+        const {
+            accountType,
+            balance,
+            dayBalance,
+            display_name,
+            endTradeDay,
+            equity,
+            firstBalance,
+            infinitive,
+            maxTradeDays,
+            percentDays,
+            platform,
+            role,
+            startTradeDay,
+            tradeDaysCount,
+            user_login,
+            user_nicename,
+            _id,
+            mtAccountId,
+            accountEmail,
+            status,
+            type,
+            level,
+            createdAt,
+            user_email
+        } = mainAccount
+        const userObject = {
+            accountType,
+            balance,
+            dayBalance,
+            display_name,
+            endTradeDay,
+            equity,
+            firstBalance,
+            infinitive,
+            maxTradeDays,
+            percentDays,
+            platform,
+            role,
+            startTradeDay,
+            tradeDaysCount,
+            user_login,
+            user_nicename,
+            _id,
+            mtAccountId,
+            accountEmail,
+            user_email,
+            accounts: allAccounts,
+            status,
+            type,
+            level,
+            endTradeDay,
+            createdAt
+        }
+        return res.status(200).json({
+            result: userObject, message: "عملیات با موفقیت انجام شد", success: true
+        })
     }
 
 }

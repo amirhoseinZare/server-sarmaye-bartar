@@ -77,9 +77,9 @@ class Application {
       .then(() => {
         console.log("Db connected ,");
         try {
-          removeUndeployedAccounts()
-          removeFailedAccounts()
-          removeExpiredAccounts()  
+          // removeUndeployedAccounts()
+          // removeFailedAccounts()
+          // removeExpiredAccounts()  
         }
         catch (err) {
           console.log("err: ", err)

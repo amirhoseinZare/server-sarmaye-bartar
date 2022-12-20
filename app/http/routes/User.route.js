@@ -56,6 +56,8 @@ router.get("/revalidate/provising-profiles", UserController.revalidateProvisingP
 
 router.get("/report/userrrrrrrrrrrrrrrrr", [auth("admin")],  UserController.reportUserrrrrrrrrrrrrrr)
 
+router.get("/get-trader-profile/:traderId", [auth("admin")],  UserController.getTraderProfile)
+
 // router.post("/deactive/meta", [auth("admin")] ,UserController.deActiveUser)
 
 module.exports = router;
