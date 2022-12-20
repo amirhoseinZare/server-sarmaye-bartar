@@ -813,12 +813,12 @@ Level: ${level}
                 .status(401)
                 .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result: null, success: false });
         }
-        // const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
-        // if (!checkPass) {
-        //     return res
-        //         .status(401)
-        //         .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result: null, success: false });
-        // }
+        const checkPass = hasher.CheckPassword(user_pass.trim(), user.user_pass); //This will return true;
+        if (!checkPass) {
+            return res
+                .status(401)
+                .send({ message: "کاربری با مشخصات ارسال شده یافت نشد", result: null, success: false });
+        }
         const token = user.generateToken();
         delete user.user_pass
         const {
@@ -906,7 +906,8 @@ Level: ${level}
             status,
             type,
             level,
-            createdAt
+            createdAt,
+            metaUsername
         } = req.user
         const userObject = {
             accountType,
@@ -934,7 +935,8 @@ Level: ${level}
             type,
             level,
             endTradeDay,
-            createdAt
+            createdAt,
+            metaUsername
         }
         return res.status(200).json({
             result: userObject, message: "عملیات با موفقیت انجام شد", success: true
