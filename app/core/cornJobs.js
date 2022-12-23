@@ -3,7 +3,7 @@ const { UserModel } = require("../models/index")
 
 const { deleteUserAccountService } = require("../services/external/meta")
 
-const removeUndeployedAccountsFunc = ()=>{
+const removeUndeployedAccountsFunc = () => {
     try {
         console.log("removeUndeployedAccountsFunc", new Date().toLocaleString())
         const axios = require('axios');
@@ -11,83 +11,83 @@ const removeUndeployedAccountsFunc = ()=>{
         const config = {
             method: 'get',
             url: `https://mt-provisioning-api-v1.agiliumtrade.agiliumtrade.ai/users/current/accounts?offset=0&limit=1&endpointVersion=v1&state=UNDEPLOYED`,
-            headers: { 
-                'auth-token': token, 
+            headers: {
+                'auth-token': token,
             },
         };
 
         axios(config)
-        .then(res=>{
-            console.log("removeUndeployedAccountsFunc", res.data.length>0 && res.data[0]._id)
-            if(res.data.length>0 && res.data[0]._id){
-                deleteUserAccountService({ mtAccountId:res.data[0]._id })
-                console.log("user deleted: ", res.data[0]._id)
-            }
+            .then(res => {
+                console.log("removeUndeployedAccountsFunc", res.data.length > 0 && res.data[0]._id)
+                if (res.data.length > 0 && res.data[0]._id) {
+                    deleteUserAccountService({ mtAccountId: res.data[0]._id })
+                    console.log("user deleted: ", res.data[0]._id)
+                }
 
-        })
-        .catch(err =>{
-            console.log(err)
-        })
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
-    catch (err){
+    catch (err) {
         console.log("err: ")
     }
-    
+
 }
 
-const removeFailedAccountsFunc = async ()=>{
+const removeFailedAccountsFunc = async () => {
     try {
         console.log('here')
         const users = await UserModel.find({
-            "$or":[
+            "$or": [
                 {
-                    hasFailedDailyLoss : true
+                    hasFailedDailyLoss: true
                 },
                 {
-                    hasFailedMaxLoss : true
+                    hasFailedMaxLoss: true
                 }
             ],
             status: "active"
         })
-        .sort("-createdAt")
-        .limit(1)
-    
+            .sort("-createdAt")
+            .limit(1)
+
         const user = users[0]
-        
+
         const axios = require('axios');
         const token = "eyJhbGciOiJIUzI1NiJ9.ZXlKcFpDSTZJall5WW1RNVpXUTVOREZpTXpjNU1EQXhNelZqTnpaaE5DSXNJbXR2YzNOb1pYSkJiVzVwWVhScElqb2lhMjl6YzJobGNrRnRibWxoZEdraWZRPT0.wbhTunpXE9T643t8PgApQal7EVSnhfZotbx8aiSrt84"
         const config = {
             method: 'get',
-            url: `https://panel.sarmayegozarebartar.com/api/user/chart/equity/${user.mtAccountId}`,
-            headers: { 
+            url: `https://panel.sarmayegozarebartar.com/api/user/chart/equity/remove-failed-user/${user.mtAccountId}`,
+            headers: {
                 "accept": "application/json, text/plain, */*",
-                'x-auth-token': token, 
+                'x-auth-token': token,
             },
         };
         console.log('here3')
         axios(config)
-            .then(res=>{
+            .then(res => {
                 console.log("removeFailedAccountsFunc", res.data, res.data.success, user.mtAccountId)
-                if(res.data.success){
-                    deleteUserAccountService({ mtAccountId:user.mtAccountId })
+                if (res.data.success) {
+                    deleteUserAccountService({ mtAccountId: user.mtAccountId })
                 }
-    
+
             })
-            .catch(err =>{
+            .catch(err => {
                 console.log(err)
             })
         console.log('here4')
     }
-    catch(err){
+    catch (err) {
         console.log("err")
     }
-  
+
 }
 
-const removeExpiredAccountsFunc = async ()=>{
+const removeExpiredAccountsFunc = async () => {
     console.log("removeExpiredAccountsFunc")
     let toSelect = {
-        infinitive:false, status:"active"
+        infinitive: false, status: "active"
     }
     const users = await UserModel
         .aggregate([
@@ -109,25 +109,25 @@ const removeExpiredAccountsFunc = async ()=>{
 
                 }
             },
-            { "$project": { mtAccountId:1, expired: 1, createdAt: 1, maxTradeDays:1, infinitive:1 } },
+            { "$project": { mtAccountId: 1, expired: 1, createdAt: 1, maxTradeDays: 1, infinitive: 1 } },
             {
                 $match: {
-                    expired : true
+                    expired: true
                 }
             }
         ])
         .sort("-createdAt")
-        // .limit(1)
-        console.log(users.length)
-    if(users.length >0) {
+    // .limit(1)
+    console.log(users.length)
+    if (users.length > 0) {
         const user = users[0]
-        if(user.infinitive)
+        if (user.infinitive)
             return
-        if(user.mtAccountId.length !== 32){
+        if (user.mtAccountId.length !== 32) {
             console.log('mtAccountId invalied')
             const result = await UserModel.findByIdAndUpdate(user._id, {
-                status:'deactive'
-            }) 
+                status: 'deactive'
+            })
             return result
         }
         const axios = require('axios');
@@ -135,40 +135,40 @@ const removeExpiredAccountsFunc = async ()=>{
         const config = {
             method: 'get',
             url: `https://panel.sarmayegozarebartar.com/api/user/chart/equity/${user.mtAccountId}`,
-            headers: { 
+            headers: {
                 "accept": "application/json, text/plain, */*",
-                'x-auth-token': token, 
+                'x-auth-token': token,
             },
         };
         axios(config)
-            .then(res=>{
-                if(res.data.success){
-                    deleteUserAccountService({ mtAccountId:user.mtAccountId })
-                    console.log("removeExpiredAccountsFunc", user.mtAccountId, user.createdAt, user.maxTradeDays, {infi:user.infinitive})
+            .then(res => {
+                if (res.data.success) {
+                    deleteUserAccountService({ mtAccountId: user.mtAccountId })
+                    console.log("removeExpiredAccountsFunc", user.mtAccountId, user.createdAt, user.maxTradeDays, { infi: user.infinitive })
                 }
-    
+
             })
-            .catch(err =>{
+            .catch(err => {
                 console.log(err)
             })
     }
 }
 
-const removeUndeployedAccounts = ()=>{
+const removeUndeployedAccounts = () => {
     const job = nodeCron.schedule("00 */1 * * * *", () => {
         removeUndeployedAccountsFunc()
     });
     job.start();
 }
 
-const removeFailedAccounts = ()=>{
+const removeFailedAccounts = () => {
     const job = nodeCron.schedule("00 */1 * * * *", () => {
         removeFailedAccountsFunc()
     });
     job.start();
 }
 
-const removeExpiredAccounts = ()=>{
+const removeExpiredAccounts = () => {
     const job = nodeCron.schedule("*/8 * * * * *", () => {
         removeExpiredAccountsFunc()
     });

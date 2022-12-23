@@ -128,7 +128,7 @@ const getChartApiConfig = (accountId) => {
     const token = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5M2ExYTM4MWFhMTU3NTU2M2RmYTI4MDk1YWQ3M2RjZSIsInBlcm1pc3Npb25zIjpbXSwidG9rZW5JZCI6IjIwMjEwMjEzIiwiaWF0IjoxNjU2MzQ4MTk3LCJyZWFsVXNlcklkIjoiOTNhMWEzODFhYTE1NzU1NjNkZmEyODA5NWFkNzNkY2UifQ.EipbTU80FTXxvQeq6bYCqQvTbi4riF9VQ3kHCcwmLMrM2j_bFAXkj2HY7H3L61Q6UMKK3Ecn2rWc0zM4sLY-z1lbTu9w4Yzkobg27S57w1pjD6cnGXAFSex6X7ziT51o97r80-_K_8448pLXgDy8Q6m7xBgBfqtTiHlstb9lyylQSUuRIOwv4G7L7hJtde_y5H6EungIfH4MscecR4Gp8yrDMgpVJ9xFRNhNgyiW6y5oSNYFdI8jS5JaY4XxPp9-OH8iql9sWFOl-F8DzwBDyv2-APQkvOXwWLHE0BS9LWkAZG8zV8IMS6RUzMR_p2CBvbSH-NeoHxc5ySqXtNbS3rPlCyRem08dpsoGc36xJuscslrTgw_R_OWV6JJhIB7cJuyyWW_7B3oCY6BpEFD98LYCagLhJWFwhb9MU5oF1H-ZTJ4G07Spm9KcEI9-iVyjxvrSUyWNtEG7m4UNb7JD30O4E1TfluhpI6h-PlY_GTu6x5M18vU2hVY5ES_-1gBpSeuoCbr4KTqEJamLKnO7_zK8tFHi5FwwQbohgu--K07qoxwXAX9NYUrh5FsoH5WqxeUvU8AFjzmztahZKZQgv06NOx5U13JIKz3sM8YmE3MIR8bILx7mG0kQ8sTWnPrCJzae4MZLAhuXTZvq2C07Qw-3sDhjXaDYEHAA58Nyi9E"
     var config = {
         method: 'get',
-        url: `https://risk-management-api-v1.new-york.agiliumtrade.ai/users/current/accounts/${accountId}/equity-chart?realTime=true`,
+        url: `https://risk-management-api-v1.london.agiliumtrade.ai/users/current/accounts/${accountId}/equity-chart?realTime=true`,
         headers: {
             'auth-token': token,
             "User-Agent": "PostmanRuntime/7.29.0",
@@ -144,7 +144,7 @@ const getTrackerApiConfig = (accountId, trackerId) => {
     const token = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5M2ExYTM4MWFhMTU3NTU2M2RmYTI4MDk1YWQ3M2RjZSIsInBlcm1pc3Npb25zIjpbXSwidG9rZW5JZCI6IjIwMjEwMjEzIiwiaWF0IjoxNjU2MzQ4MTk3LCJyZWFsVXNlcklkIjoiOTNhMWEzODFhYTE1NzU1NjNkZmEyODA5NWFkNzNkY2UifQ.EipbTU80FTXxvQeq6bYCqQvTbi4riF9VQ3kHCcwmLMrM2j_bFAXkj2HY7H3L61Q6UMKK3Ecn2rWc0zM4sLY-z1lbTu9w4Yzkobg27S57w1pjD6cnGXAFSex6X7ziT51o97r80-_K_8448pLXgDy8Q6m7xBgBfqtTiHlstb9lyylQSUuRIOwv4G7L7hJtde_y5H6EungIfH4MscecR4Gp8yrDMgpVJ9xFRNhNgyiW6y5oSNYFdI8jS5JaY4XxPp9-OH8iql9sWFOl-F8DzwBDyv2-APQkvOXwWLHE0BS9LWkAZG8zV8IMS6RUzMR_p2CBvbSH-NeoHxc5ySqXtNbS3rPlCyRem08dpsoGc36xJuscslrTgw_R_OWV6JJhIB7cJuyyWW_7B3oCY6BpEFD98LYCagLhJWFwhb9MU5oF1H-ZTJ4G07Spm9KcEI9-iVyjxvrSUyWNtEG7m4UNb7JD30O4E1TfluhpI6h-PlY_GTu6x5M18vU2hVY5ES_-1gBpSeuoCbr4KTqEJamLKnO7_zK8tFHi5FwwQbohgu--K07qoxwXAX9NYUrh5FsoH5WqxeUvU8AFjzmztahZKZQgv06NOx5U13JIKz3sM8YmE3MIR8bILx7mG0kQ8sTWnPrCJzae4MZLAhuXTZvq2C07Qw-3sDhjXaDYEHAA58Nyi9E"
     var config = {
         method: 'get',
-        url: `https://risk-management-api-v1.new-york.agiliumtrade.ai/users/current/accounts/${accountId}/drawdown-trackers/${trackerId}/statistics?limit=1000000000`,
+        url: `https://risk-management-api-v1.london.agiliumtrade.ai/users/current/accounts/${accountId}/drawdown-trackers/${trackerId}/statistics?limit=1000000000`,
         headers: {
             'auth-token': token,
             "User-Agent": "PostmanRuntime/7.29.0",
@@ -168,7 +168,7 @@ const addDrawdownTracker = async (mtAccountId) => {
     console.log('tracker, ', data)
     const config = {
         method: 'post',
-        url: `https://risk-management-api-v1.new-york.agiliumtrade.ai/users/current/accounts/${mtAccountId}/trackers`,
+        url: `https://risk-management-api-v1.london.agiliumtrade.ai/users/current/accounts/${mtAccountId}/trackers`,
         headers: {
             'User-Agent': "PostmanRuntime/7.29.0",
             'auth-token': token,
@@ -307,8 +307,8 @@ const updateObjective = ({ userName, metaUsername, user_email, tradeDaysCount, m
 
     let endTradeDay = ''
     if (maxTradeDays > 0) {
-        console.log({firstTradeDay})
-        if(firstTradeDay === '-' || !firstTradeDay){
+        console.log({ firstTradeDay })
+        if (firstTradeDay === '-' || !firstTradeDay) {
             endTradeDay = '-'
             return objective
         }
@@ -342,7 +342,7 @@ const getHistoryOrdersConfig = ({ accountId, maxTradeDays = 60 }) => {
     const startTime = new Date(new Date(noewDate - 86400 * 1000 * (reallyMaxTradeDays + 1)))
     const endTime = new Date(new Date(noewDate + 86400 * 1000 * ((reallyMaxTradeDays + 1))))
     console.log("inside getHistoryOrdersConfig", reallyMaxTradeDays, { startTime }, { endTime }, { maxTradeDays })
-    const url = `https://mt-client-api-r6fbqlkvmwtbessr.new-york.agiliumtrade.ai/users/current/accounts/${accountId}/history-orders/time/${startTime.toISOString()}/${endTime.toISOString()}`
+    const url = `https://mt-client-api-r6fbqlkvmwtbessr.london.agiliumtrade.ai/users/current/accounts/${accountId}/history-orders/time/${startTime.toISOString()}/${endTime.toISOString()}`
     console.log(url)
     var config = {
         method: 'get',
@@ -408,39 +408,39 @@ const findServerByAccountTypeAndPlatform = ({ profiles, accountType, platform })
 
 class UserController {
     async getAll(req, res) {
-        let { 
-            pageSize = 20, 
-            pageNumber = 1, 
-            user_email = "", 
-            display_name = "", 
-            level = "", 
-            user_login = "", 
-            platform = "", 
-            accountType = "", 
-            metaUsername = "", 
-            standardType = "", 
-            hasFailedMaxLoss, 
-            hasFailedDailyLoss, 
+        let {
+            pageSize = 20,
+            pageNumber = 1,
+            user_email = "",
+            display_name = "",
+            level = "",
+            user_login = "",
+            platform = "",
+            accountType = "",
+            metaUsername = "",
+            standardType = "",
+            hasFailedMaxLoss,
+            hasFailedDailyLoss,
             status,
-            anyObjectiveFailed=""
+            anyObjectiveFailed = ""
         } = req.query
         pageSize = +pageSize
         pageNumber = +pageNumber
         pageNumber = pageNumber - 1
         const query = {
-            "$or":[]
+            "$or": []
         }
         if (user_email) {
-            query["$or"].push({user_email: user_email})
-            query["$or"].push({accountEmail: user_email})
+            query["$or"].push({ user_email: user_email })
+            query["$or"].push({ accountEmail: user_email })
         }
 
-        if(convertStringToBoolean(anyObjectiveFailed)) {
-            query["$or"].push({hasFailedDailyLoss: true})
-            query["$or"].push({hasFailedMaxLoss: true})
+        if (convertStringToBoolean(anyObjectiveFailed)) {
+            query["$or"].push({ hasFailedDailyLoss: true })
+            query["$or"].push({ hasFailedMaxLoss: true })
         }
 
-        if(query["$or"].length ===0)
+        if (query["$or"].length === 0)
             delete query["$or"]
 
         if (display_name)
@@ -1142,13 +1142,14 @@ Level: ${level}
                 const data = await getChartFromMemory({ accountId })
                 chart = data.chart
                 maxDailyLossObjective = [data.objective] || null
-                const minTradeDayRes = await calculateMinTradeDays({ accountId, maxTradeDays })
+                console.log("maxDailyLossObjective: =>", maxDailyLossObjective, data.objective)
                 tradeDaysObjective = {
-                    tradeDaysCount: minTradeDayRes?.tradeDaysCount,
-                    firstTradeDay: minTradeDayRes?.firstTradeDay
+                    tradeDaysCount: data.objective?.minimumTradeDaysObjective?.count,
+                    firstTradeDay: data.objective?.minimumTradeDaysObjective?.firstTradeDay
                 }
             }
             else {
+                console.log("it comes here")
                 const promises = [axios(getChartApiConfig(accountId))]
                 if (trackerId) {
                     promises.push(axios(getTrackerApiConfig(accountId, trackerId)))
@@ -1425,7 +1426,7 @@ Level: ${level}
     }
 
     async getTraderProfile(req, res) {
-        const { traderId:id } = req.params
+        const { traderId: id } = req.params
         const mainAccount = await UserModel.findById(id).select("-user_pass  -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url ")
         if (!mainAccount) {
             return res.status(404).json({
@@ -1434,16 +1435,18 @@ Level: ${level}
                 success: false
             })
         }
-        
-        const allAccounts = await UserModel.find({ "$or":[
-            {
-                user_email: mainAccount.user_email || mainAccount.accountEmail
-            },
-            {
-                accountEmail: mainAccount.user_email || mainAccount.accountEmail
-            }
 
-        ] }).select("-user_pass  -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url ")
+        const allAccounts = await UserModel.find({
+            "$or": [
+                {
+                    user_email: mainAccount.user_email || mainAccount.accountEmail
+                },
+                {
+                    accountEmail: mainAccount.user_email || mainAccount.accountEmail
+                }
+
+            ]
+        }).select("-user_pass  -minEquityHistory -equityHistory -user_activation_key -user_status -ID -user_url ")
         const {
             accountType,
             balance,
@@ -1501,6 +1504,136 @@ Level: ${level}
         return res.status(200).json({
             result: userObject, message: "عملیات با موفقیت انجام شد", success: true
         })
+    }
+
+    async getRemoveFailedUserChart(req, res) {
+
+        let selectString = ""
+        let orQuery = {}
+
+        if (req.user.role === "user") {
+            selectString += "-mtAccountId -mtAccessToken"
+        }
+
+        const { userId: accountId } = req.params
+        redis = getRedisClient()
+        const user = await UserModel.findOne({ mtAccountId: accountId }, { tradeDaysCount: 1, user_login: 1, user_email: 1, metaUsername: 1, mtAccountId: 1, firstBalance: 1, startTradeDay: 1, percentDays: 1, hasFailedDailyLoss: 1, hasFailedMaxLoss: 1, maxLossLimit: 1, maxTradeDays: 1, trackerId: 1, status: 1 })
+            .catch(err => {
+                res.send({
+                    result: null,
+                    success: true,
+                    message: "عملیات با خطا روبرو شد."
+                })
+            })
+        if (!user) {
+            return res.status(404).json({
+                result: null,
+                message: "امکان دسترسی به این بخش برای شما مجاز نمی باشد",
+                success: false
+            })
+        }
+        const { firstBalance, startTradeDay, percentDays, hasFailedDailyLoss, hasFailedMaxLoss, maxLossLimit, mtAccountId, maxTradeDays, _id: userId, trackerId, status } = user
+
+        try {
+            let chart = []
+            let maxDailyLossObjective = {}
+            let tradeDaysObjective
+            console.log('try 0 ', new Date().toLocaleString())
+            const nowUTCMinutes = new Date().getUTCMinutes()
+            console.log({ status })
+            if (status === 'deactive') {
+                const data = await getChartFromMemory({ accountId })
+                chart = data.chart
+                maxDailyLossObjective = [data.objective] || null
+                tradeDaysObjective = {
+                    tradeDaysCount: data.objective?.minimumTradeDaysObjective?.count,
+                    firstTradeDay: data.objective?.minimumTradeDaysObjective?.firstTradeDay
+                }
+            }
+            else {
+                console.log("it comes here")
+                const promises = [axios(getChartApiConfig(accountId))]
+                if (trackerId) {
+                    promises.push(axios(getTrackerApiConfig(accountId, trackerId)))
+                }
+                else {
+                    promises.push(new Promise((resolve, reject) => {
+                        resolve(null)
+                    }))
+                }
+                const [chartData, objectiveData] = await Promise.all(promises)
+                chart = chartData.data
+                maxDailyLossObjective = objectiveData?.data || []
+                tradeDaysObjective = {
+                    tradeDaysCount: 0,
+                    firstTradeDay: ''
+                }
+
+            }
+            const formattedChart = formatChart(chart, user)
+            const objective = updateObjective({
+                userName: user.user_login,
+                user_email: user.user_email,
+                metaUsername: user.metaUsername,
+                tradeDaysCount: maxDailyLossObjective.reduce((acc, cv) => acc + (cv.tradeDayCount || 0), 0),
+                maxDailyLossObjective,
+                formattedChart,
+                maxLossLimit,
+                firstBalance,
+                startTradeDay: maxDailyLossObjective && Array.isArray(maxDailyLossObjective) && maxDailyLossObjective.length > 0 ? maxDailyLossObjective[0].startBrokerTime.split(" ")[0] : startTradeDay,
+                hasFailedMaxLoss,
+                hasFailedDailyLoss,
+                percentDays,
+                userId,
+                maxTradeDays
+            })
+            saveChartInMemory({ accountId, chart: formattedChart, objective: objective })
+            console.log('try 2 ', new Date().toLocaleString(), objective)
+            return res.send({
+                result: {
+                    chart: formattedChart,
+                    objective: objective
+                },
+                success: true,
+                message: "عملیات با موفقیت انجام شد."
+            })
+        }
+        catch (error) {
+            console.log(error.response)
+            if (error.status === 404) {
+                return res.status(400).json({
+                    success: false,
+                    result: null,
+                    message: "یوزر مورد نظر موجود نمی باشد"
+                })
+            }
+            console.log("error", "error")
+            console.log('catch 1 ', new Date().toLocaleString())
+            const { chart } = await getChartFromMemory({ accountId })
+            const objective = updateObjective({
+                userName: user.user_login,
+                user_email: user.user_email,
+                metaUsername: user.metaUsername,
+                formattedChart: chart,
+                maxLossLimit,
+                firstBalance,
+                startTradeDay,
+                hasFailedMaxLoss,
+                hasFailedDailyLoss,
+                percentDays,
+                userId,
+                maxTradeDays
+            })
+            console.log('catch 2 ', new Date().toLocaleString())
+            return res.send({
+                result: {
+                    chart: formatChart(chart, user),
+                    objective: objective
+                },
+                success: true,
+                message: "عملیات با موفقیت انجام شد."
+            })
+        }
     }
 
 }
