@@ -1178,7 +1178,7 @@ Level: ${level}
                 formattedChart,
                 maxLossLimit,
                 firstBalance,
-                startTradeDay: maxDailyLossObjective && Array.isArray(maxDailyLossObjective) && maxDailyLossObjective.length > 0 ? maxDailyLossObjective[0].startBrokerTime.split(" ")[0] : startTradeDay,
+                startTradeDay: maxDailyLossObjective && Array.isArray(maxDailyLossObjective) && maxDailyLossObjective.length > 0 && maxDailyLossObjective[0].startBrokerTime ? maxDailyLossObjective[0].startBrokerTime.split(" ")[0] : startTradeDay,
                 hasFailedMaxLoss,
                 hasFailedDailyLoss,
                 percentDays,
